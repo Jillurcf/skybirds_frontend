@@ -93,6 +93,7 @@ Use 4 px base increment. Editorial sections use larger rhythmic steps.
 | `ProductEnquiryLinks` | Product-aware phone/WhatsApp/email actions |
 | `Reveal` | Motion wrapper with reduced-motion fallback |
 | `ParallaxImage` | Scroll-linked image movement |
+| `ImageCarousel` | Swipeable, keyboard-accessible photograph carousel with autoplay, pause control and slide indicators |
 | `LookbookCanvas` | Dynamically imported WebGL lookbook-card layer |
 | `ParticleField` | Lightweight CSS/canvas particles |
 | `SectionHeading` | Consistent heading reveal with `reveal={false}` escape hatch |
@@ -103,7 +104,7 @@ Use 4 px base increment. Editorial sections use larger rhythmic steps.
 The homepage uses the shared primitives in this order: `HomeHero`, `BrandIntroduction`, `FeaturedCollections`, `NewArrivals`, `SignatureMenswear`, `ManufacturingCapabilities`, `CraftsmanshipQuality`, `CompanyStory`, `ContactCta` and the global `SiteFooter`.
 
 Hero copy and the WebGL card imagery are delivered through `getHomeContent()` and rendered with the existing `Section`, `Container`, `Button` and `BrandLogo` primitives. The hero is capped at `max-h-screen` with a `100svh - 72px` minimum so it never grows beyond the viewport; a full-bleed silent video sequence is the only background layer, with floating lookbook cards, gradient scrims and particles above it.
- Featured collections and the manufacturing study use the same repository-driven image pattern as arrivals, signature and craftsmanship sections. Dark sections override `.section-title` and `.lede` to ivory through token-aware wrapper selectors.
+  Featured collections and the manufacturing study use the same repository-driven image pattern as arrivals and signature sections. The craftsmanship section uses `ImageCarousel` with three client-supplied photographs from home content. Dark sections override `.section-title` and `.lede` to ivory through token-aware wrapper selectors.
 
 ## shadcn/ui usage
 

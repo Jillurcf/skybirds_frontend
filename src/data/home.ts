@@ -187,9 +187,24 @@ export const homeContent: HomeContent = {
     title: 'Quality is a discipline, not a claim.',
     description:
       'Our visual language is built around the evidence of craft: the surface of the cloth, the behaviour of a seam, the restraint of a final finish.',
-    imagePlaceholder: 'Illustrative craftsmanship detail',
-    image: '/images/editorial/craftsmanship-detail.webp',
-    imageAlt: 'Illustrative close-up of woven fabric',
+    imagePlaceholder: 'Craftsmanship photograph',
+    images: [
+      {
+        src: '/images/craftmanships/craftmanship01.jpg',
+        alt: 'Craftsman working on a garment in the workshop',
+        placeholderColor: '#D9C6BB'
+      },
+      {
+        src: '/images/craftmanships/craftmanship02.jpg',
+        alt: 'Garment construction detail',
+        placeholderColor: '#D6AFA1'
+      },
+      {
+        src: '/images/craftmanships/craftmanship03.jpg',
+        alt: 'Finished menswear detail',
+        placeholderColor: '#B8B1A6'
+      }
+    ],
     pillars: [
       {
         title: 'Fabric',

@@ -70,7 +70,6 @@ const editorials = [
   ['signature-t-shirt', source.tee],
   ['signature-trouser', source.jeans],
   ['signature-jacket', source.jacket],
-  ['craftsmanship-detail', source.fabricWeave],
   ['craftsmanship-editorial', source.collection],
   ['production-quality', source.workshop],
   ['hero-fashion', source.editorial, 1920, 1080]

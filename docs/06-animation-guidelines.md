@@ -151,6 +151,7 @@ Constraints:
 | Scroll reveals | 0.85 → 1 fade and lift | Immediate readable state |
 | Product hover | Scale/fade | Instant colour change only |
 | Gallery/selection | Crossfade and spring | Instant state swap |
+| Carousel | 5 s autoplay with pause control and smooth scroll-snap | No autoplay; instant slide change |
 | Route transition | 240 ms fade | None |
 
 ## Performance guardrails
@@ -171,6 +172,7 @@ Constraints:
 - `LookbookCanvas` renders three portrait cards on low tier and four on high tier, using repository-driven editorial imagery. Cards drift on independent cycles, tilt/parallax toward the pointer, respond to pointer velocity and move magnetically when the pointer is near. Holding the pointer down amplifies movement; a rose-gold glow trails the pointer behind the cards. Rendering pauses when off-screen or when the tab is hidden; reduced motion uses a single demand frame with interaction listeners disabled.
 - `WebGLGate` waits for intersection and an 800 ms idle window, resolves to a low tier below 1024 px and the full scene on desktops. Context loss and runtime errors fall back to `LookbookPoster`.
 - `ParallaxImage` scrubs an overscaled image from -6% to 6% vertical movement with scale 1.1 → 1.08.
+- `ImageCarousel` uses native horizontal scroll-snap for swipe and smooth button navigation. It advances every 5 s when visible, pauses on hover/focus and behind a labelled pause control, and stops entirely under reduced motion or when the tab/page is hidden.
 - `HorizontalEditorial` pins only at `min-width: 1024px`; mobile and reduced-motion visitors receive a stacked, static list.
 - `Reveal`/`ScrollReveal` provide section-level fades; `SectionHeading` reveals by default unless its parent already handles the reveal.
 - `SiteFooter` uses a short column stagger.

@@ -73,8 +73,7 @@ export interface HomeCraftsmanshipContent {
   title: string;
   description: string;
   imagePlaceholder: string;
-  image: string;
-  imageAlt: string;
+  images: EditorialImage[];
   pillars: HomeCraftPillar[];
 }
 

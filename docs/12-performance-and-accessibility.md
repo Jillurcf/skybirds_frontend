@@ -19,7 +19,7 @@
 - Use `next/image` for all content images.
 - Provide `width`/`height` or `fill` with sized container.
 - Prefer AVIF then WebP; keep JPEG fallback where needed.
-- Local WebP assets are generated from standard-license Unsplash photos by `npm run images:seed`; they remain illustrative until final photography is supplied.
+- Local WebP assets are generated from standard-license Unsplash photos by `npm run images:seed`; they remain illustrative until final photography is supplied. Client-supplied craftsmanship JPEGs are served directly and optimized by `next/image`.
 - Decorative WebGL fallback and lookbook poster images use empty alt text and `aria-hidden` wrappers.
 - Lazy-load below-fold images; the hero has no image layer.
 - Hero video playback starts after hydration; the active and upcoming clips auto-preload and the remaining clips preload metadata only. Playback pauses off-screen or in a hidden tab.
@@ -67,6 +67,8 @@
 
 WCAG 2.2 AA.
 
+Auto-updating carousels provide a persistent pause/play control (WCAG 2.2.2) and never advance under reduced motion.
+
 ## Semantic structure
 
 - One `h1` per route.
@@ -83,6 +85,7 @@ WCAG 2.2 AA.
 | Product cards | Focusable link with visible ring |
 | Size/color selector | Arrow keys via radio-group pattern |
 | Gallery | Thumbnail buttons, keyboard next/previous and Escape to close lightbox |
+| Craftsmanship carousel | Native swipe, arrow keys on the region, labelled previous/next, slide and pause/play buttons; autoplay pauses on hover/focus, off-screen and hidden tabs |
 | Colour/size radio groups | Native arrow-key selection and visible focus ring |
 | Contact links | Native anchor behavior |
 | Filter pills | Radio/tab semantics with arrow support |

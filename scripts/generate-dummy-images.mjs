@@ -285,7 +285,6 @@ async function main() {
     ['signature-t-shirt', 'signatureTee'],
     ['signature-trouser', 'signatureTrouser'],
     ['signature-jacket', 'signatureJacket'],
-    ['craftsmanship-detail', 'craftDetail'],
     ['craftsmanship-editorial', 'craftEditorial'],
     ['production-quality', 'productionQuality']
   ];

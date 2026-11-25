@@ -36,7 +36,7 @@ export interface EditorialImage {
 }
 ```
 
-The homepage hero, featured collections, arrivals, manufacturing study, signature panels and craftsmanship sections use `EditorialImage` through `getHomeContent()`. Signature and craftsmanship sections retain their explicit placeholder labels as fallbacks.
+The homepage hero, featured collections, arrivals, manufacturing study, signature panels and craftsmanship carousel use `EditorialImage` through `getHomeContent()`. Signature panels retain explicit placeholder labels, while craftsmanship exposes an `images` array of client-supplied photographs with a shared fallback label.
 
 ## Color option
 

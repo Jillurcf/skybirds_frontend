@@ -66,7 +66,7 @@ Implemented sections in order:
 4. New arrivals framed with illustrative Unsplash imagery pending confirmed photography.
 5. Signature menswear editorial study with desktop horizontal scroll.
 6. Manufacturing capability process overview without unverified metrics.
-7. Craftsmanship and quality split with GSAP parallax.
+7. Craftsmanship and quality split with an accessible, autoplaying three-photograph carousel using client-supplied workshop imagery and a pause control.
 8. Company story with full logo panel.
 9. Contact CTA using only configured direct channels.
 10. Global site footer.

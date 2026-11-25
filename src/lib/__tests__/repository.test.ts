@@ -41,7 +41,12 @@ describe('getHomeContent', () => {
     expect(content.signature.panels.every((panel) => panel.image.startsWith('/images/editorial/'))).toBe(true);
     expect(content.collections.items.every((item) => item.image?.src.startsWith('/images/categories/'))).toBe(true);
     expect(content.manufacturing.image?.src).toBe('/images/editorial/process-03.webp');
-    expect(content.craftsmanship.image).toBe('/images/editorial/craftsmanship-detail.webp');
+    expect(content.craftsmanship.images).toHaveLength(3);
+    expect(content.craftsmanship.images.map((image) => image.src)).toEqual([
+      '/images/craftmanships/craftmanship01.jpg',
+      '/images/craftmanships/craftmanship02.jpg',
+      '/images/craftmanships/craftmanship03.jpg'
+    ]);
     expect(serialised).not.toMatch(/\b\d{2,}%|\b\d+\+|\bcertified\b/i);
   });
 });

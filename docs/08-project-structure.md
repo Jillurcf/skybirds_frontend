@@ -16,6 +16,7 @@ SkyBirds/
 │   │   └── skybirds-*.jpg/png          # legacy aliases
 │       ├── products/             # Product imagery by category
 │       ├── categories/           # Category hero imagery
+│       ├── craftmanships/        # Supplied craftsmanship carousel photographs
 │       └── editorial/            # Hero, homepage, process and fallback imagery
 ├── scripts/
 │   ├── generate-dummy-images.mjs # Offline illustrated fallback
@@ -120,6 +121,7 @@ src/components/
     ├── container.tsx
     ├── dialog.tsx
     ├── dropdown-menu.tsx
+    ├── image-carousel.tsx
     ├── image-container.tsx
     ├── nav-link.tsx
     ├── section-heading.tsx
@@ -285,6 +287,7 @@ import { cn } from '@/lib/utils';
 - Derivative logo files are generated from the original and versioned.
 - Product images go in `public/images/products/<category>/`.
 - Category and editorial images go in `public/images/categories/` and `public/images/editorial/`, including the wide `hero-fashion.webp` editorial asset.
+- Client-supplied craftsmanship photographs go in `public/images/craftmanships/` and are referenced from home content.
 - `npm run images:seed` downloads the documented Unsplash photo IDs and exports local WebP files.
 - `npm run images:seed:illustrations` regenerates the offline illustrated fallback set.
 - Prefer AVIF/WebP exports with descriptive names; keep source files OUT of `public` unless used.

@@ -6,7 +6,7 @@ Premium men's fashion and garment manufacturing showcase — **cinematic homepag
 
 The Next.js foundation, design tokens, shared UI primitives, navigation, footer, tokenized motion utilities and WebGL safety layer are implemented. The homepage includes a full-screen cinematic hero with a priority fashion image baseline, CSS-keyframed entrance sequence, interactive Three.js lookbook cards on all viewports with a static reduced-motion frame, and all ten planned homepage sections. Repository-driven portrait cards float at different depths, tilt/parallax with pointer velocity, lift magnetically near the cursor and move further while the pointer is held down; a rose-gold glow trails the pointer. Motion refinements keep important content readable without JavaScript, gate hover effects to hover-capable devices, and use an accessible deep rose-gold derivative for UI text and focus states.
 
-The sample product catalogue is implemented at `/products` and `/products/<category>`, with URL-backed search, filters and sorting, a mobile filter drawer, animated cards, empty states and premium interactive product detail pages with variant selection, a thumbnail gallery and lightbox. Illustrative standard-license Unsplash imagery is wired across the catalogue, categories, editorial sections, manufacturing process and WebGL fallback; final brand photography and confirmed catalogue data are still pending.
+The sample product catalogue is implemented at `/products` and `/products/<category>`, with URL-backed search, filters and sorting, a mobile filter drawer, animated cards, empty states and premium interactive product detail pages with variant selection, a thumbnail gallery and lightbox. Illustrative standard-license Unsplash imagery is wired across the catalogue, categories, editorial sections, manufacturing process and WebGL fallback; client-supplied craftsmanship photographs appear in the homepage carousel. Final brand photography and confirmed catalogue data are still pending.
 
 Phase 1 QA and SEO hardening is complete: route-level canonical/OG/Twitter metadata, generated social image, JSON-LD, sitemap, robots, 404 hardening, placeholder-safe contact channels, component tests and a production route smoke check. Final results and limitations are recorded in [`docs/18-final-qa-report.md`](docs/18-final-qa-report.md).
 
@@ -69,7 +69,7 @@ Included now:
 - Sample product catalogue with animated cards, desktop filter rail, mobile filter drawer, URL-synced search/filters/sort and responsive empty states.
 - Premium product detail pages with animated variant selection, gallery/lightbox, specifications and direct enquiry links carrying product context.
 - About, Manufacturing and Contact pages with placeholder-safe content and direct `mailto:` enquiry composition.
-- Illustrative Unsplash imagery across products, categories, homepage hero, featured collections, manufacturing study, editorial sections and the static WebGL fallback.
+- Illustrative Unsplash imagery across products, categories, homepage hero, featured collections, manufacturing study, editorial sections and the static WebGL fallback, plus a client-supplied craftsmanship carousel.
 - Canonical URLs, Open Graph/Twitter metadata, JSON-LD, generated social image, sitemap, robots, branded 404 and production route smoke verification.
 - Unit and component tests for SEO, contact, catalogue, product selectors, navigation, logo and WebGL fallback.
 

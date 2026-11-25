@@ -122,6 +122,7 @@ Rose gold is an accent, not a background theme. For UI text, focus rings, select
 - Consistent color grading across the catalogue.
 - Use sourced Unsplash photographs only as clearly labelled illustrative placeholders until final brand photography is supplied.
 - Keep source photo IDs in the seed script so imagery can be replaced and audited.
+- Label client-supplied photographs as supplied imagery, not as illustrative stock placeholders.
 - Give every informative image meaningful `alt` text; decorative imagery uses empty alt.
 
 ## UI principles
