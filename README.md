@@ -4,11 +4,13 @@ Premium men's fashion and garment manufacturing showcase — **cinematic homepag
 
 ## Current status
 
-The Next.js foundation, design tokens, shared UI primitives, navigation, footer, tokenized motion utilities and WebGL safety layer are implemented. The homepage includes a full-screen cinematic hero with a priority fashion image baseline, CSS-keyframed entrance sequence, interactive Three.js lookbook cards on all viewports with a static reduced-motion frame, and all ten planned homepage sections. Repository-driven portrait cards float at different depths and tilt/parallax with the pointer; tap/click adds a brief pulse. Motion refinements keep important content readable without JavaScript, gate hover effects to hover-capable devices, and use an accessible deep rose-gold derivative for UI text and focus states.
+The Next.js foundation, design tokens, shared UI primitives, navigation, footer, tokenized motion utilities and WebGL safety layer are implemented. The homepage includes a full-screen cinematic hero with a priority fashion image baseline, CSS-keyframed entrance sequence, interactive Three.js lookbook cards on all viewports with a static reduced-motion frame, and all ten planned homepage sections. Repository-driven portrait cards float at different depths, tilt/parallax with pointer velocity, lift magnetically near the cursor and move further while the pointer is held down; a rose-gold glow trails the pointer. Motion refinements keep important content readable without JavaScript, gate hover effects to hover-capable devices, and use an accessible deep rose-gold derivative for UI text and focus states.
 
 The sample product catalogue is implemented at `/products` and `/products/<category>`, with URL-backed search, filters and sorting, a mobile filter drawer, animated cards, empty states and premium interactive product detail pages with variant selection, a thumbnail gallery and lightbox. Illustrative standard-license Unsplash imagery is wired across the catalogue, categories, editorial sections, manufacturing process and WebGL fallback; final brand photography and confirmed catalogue data are still pending.
 
-Start with [`docs/00-project-overview.md`](docs/00-project-overview.md) and follow the numbered documentation through [`docs/17-task-tracker.md`](docs/17-task-tracker.md).
+Phase 1 QA and SEO hardening is complete: route-level canonical/OG/Twitter metadata, generated social image, JSON-LD, sitemap, robots, 404 hardening, placeholder-safe contact channels, component tests and a production route smoke check. Final results and limitations are recorded in [`docs/18-final-qa-report.md`](docs/18-final-qa-report.md).
+
+Start with [`docs/00-project-overview.md`](docs/00-project-overview.md) and follow the numbered documentation through [`docs/18-final-qa-report.md`](docs/18-final-qa-report.md).
 
 ## Brand assets
 
@@ -42,11 +44,15 @@ npm run lint
 npm run typecheck
 npm run test
 npm run build
+npm run verify:routes
 npm run images:seed
 npm run images:seed:illustrations
+npm run images:og
 ```
 
-All four verification commands are expected to pass after each milestone. `images:seed` refreshes local WebP imagery from the documented Unsplash sources; `images:seed:illustrations` restores the offline illustrated fallback set.
+`verify:routes` requires a completed build and starts a temporary production server on port `4310` (`VERIFY_PORT` overrides it).
+
+All four core verification commands (`lint`, `typecheck`, `test`, `build`) plus `verify:routes` pass on the final phase 1 code. `images:seed` refreshes local WebP imagery from the documented Unsplash sources; `images:seed:illustrations` restores the offline illustrated fallback set; `images:og` regenerates the social preview.
 
 ## Scope
 
@@ -58,17 +64,20 @@ Included now:
 - Footer with contact links.
 - Tokenized Motion reveals and interactions, GSAP limited to scrubbed parallax/pinning, and a WebGL gate with poster fallback, viewport tiers, idle/intersection gating and context-loss recovery.
 - Full homepage: hero, brand introduction, featured collections, new arrivals, signature menswear, manufacturing, craftsmanship, company story, contact CTA and footer.
-- Cinematic hero with priority editorial image, staged logo/headline reveal, CSS particles, drifting image layer, tiered pointer-interactive WebGL lookbook cards and a static card poster fallback.
+- Cinematic hero with priority editorial image, staged logo/headline reveal, CSS particles, drifting image layer, tiered pointer-driven WebGL lookbook cards with velocity sway, magnetic lift, drag amplification, trailing glow and a static card poster fallback.
 - Motion section reveals, GSAP image parallax with subtle scaling, and desktop horizontal editorial storytelling.
 - Sample product catalogue with animated cards, desktop filter rail, mobile filter drawer, URL-synced search/filters/sort and responsive empty states.
 - Premium product detail pages with animated variant selection, gallery/lightbox, specifications and direct enquiry links carrying product context.
 - About, Manufacturing and Contact pages with placeholder-safe content and direct `mailto:` enquiry composition.
 - Illustrative Unsplash imagery across products, categories, homepage hero, featured collections, manufacturing study, editorial sections and the static WebGL fallback.
+- Canonical URLs, Open Graph/Twitter metadata, JSON-LD, generated social image, sitemap, robots, branded 404 and production route smoke verification.
+- Unit and component tests for SEO, contact, catalogue, product selectors, navigation, logo and WebGL fallback.
 
 Planned later:
 
 - Confirmed photography, catalogue data and verified manufacturing/contact figures.
-- Sitemap, robots and final QA hardening.
+- Playwright E2E, Lighthouse CI and axe automation once tooling is approved.
+- Real-device/cross-browser visual sign-off.
 
 Excluded:
 
@@ -99,7 +108,8 @@ Excluded:
 | `docs/15-future-backend-integration.md` | Backend seams |
 | `docs/16-milestones-and-timeline.md` | Delivery plan |
 | `docs/17-task-tracker.md` | Execution checklist |
+| `docs/18-final-qa-report.md` | Final QA, limitations and launch readiness |
 
 ## Next milestone
 
-Milestone 7 — QA, confirmed content/assets, sitemap/robots and launch readiness.
+Launch sign-off after confirmed contact details, final photography/catalogue and visual approval; an optional backend/CMS phase is described in [`docs/15-future-backend-integration.md`](docs/15-future-backend-integration.md).

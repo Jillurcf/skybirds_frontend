@@ -12,7 +12,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "images:seed": "node scripts/seed-unsplash-images.mjs",
-    "images:seed:illustrations": "node scripts/generate-dummy-images.mjs"
+    "images:seed:illustrations": "node scripts/generate-dummy-images.mjs",
+    "images:og": "node scripts/generate-og-image.mjs",
+    "verify:routes": "node scripts/verify-routes.mjs"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",

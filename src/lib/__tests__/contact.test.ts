@@ -28,6 +28,16 @@ describe('contact helpers', () => {
   it('detects placeholder contact data', () => {
     expect(hasContactDetails('+880XXXXXXXXXX')).toBe(false);
     expect(hasContactDetails('hello@example.com')).toBe(false);
+    expect(hasContactDetails('   ')).toBe(false);
     expect(hasContactDetails('+8801711000111')).toBe(true);
+  });
+
+  it('does not generate links from placeholder values', () => {
+    const channels = buildContactChannels({
+      phone: '+880XXXXXXXXXX',
+      whatsapp: '880XXXXXXXXXX',
+      email: 'hello@example.com'
+    });
+    expect(channels.every((channel) => !channel.available && !channel.href)).toBe(true);
   });
 });

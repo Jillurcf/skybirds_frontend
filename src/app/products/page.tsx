@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import { CatalogPageShell } from '@/components/catalog/catalog-page-shell';
 import { getCategories, getProducts } from '@/lib/repository';
+import { createPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: 'Collections | SKY BIRDS',
-  description: 'Explore the SKY BIRDS sample menswear catalogue. Final photography and product details are pending.'
-};
+  description: 'Explore the SKY BIRDS sample menswear catalogue. Final photography and product details are pending.',
+  path: '/products'
+});
 
 export default async function ProductsPage() {
   const [products, categories] = await Promise.all([getProducts(), getCategories()]);

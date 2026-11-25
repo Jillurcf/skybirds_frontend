@@ -31,7 +31,7 @@ const assets: Record<
     label: 'SKY BIRDS bird emblem'
   },
   icon: {
-    src: '/images/brand/sky-birds-emblem.png',
+    src: '/images/brand/sky-birds-icon.png',
     ratio: 1,
     defaultWidth: 44,
     label: 'SKY BIRDS icon'

@@ -6,18 +6,17 @@ No backend, no API route and no form submission service. All contact actions use
 
 ## Single source of truth
 
-Create `src/config/contact.ts`. Pages and components must import from there.
+`src/config/contact.ts` is the only source of truth. Pages and components must import from there. Values come from `NEXT_PUBLIC_*` environment variables with clearly marked placeholders; no live fake links are generated.
 
-```ts
-export const contact = {
-  phone: '+880XXXXXXXXXX',
-  whatsapp: '880XXXXXXXXXX',
-  email: 'hello@example.com',
-  address: 'To be supplied',
-  hours: 'To be supplied',
-  channels: [...]
-};
+```env
+NEXT_PUBLIC_PHONE=
+NEXT_PUBLIC_WHATSAPP_NUMBER=
+NEXT_PUBLIC_CONTACT_EMAIL=
+NEXT_PUBLIC_ADDRESS=
+NEXT_PUBLIC_BUSINESS_HOURS=
 ```
+
+`isPlaceholderContactValue()` marks blank and `To be supplied`/example values as unavailable. `buildContactChannels()` hides unavailable channels, and `ContactLinks` renders a plain "Contact details coming soon." message when none are configured.
 
 ## Channel formats
 
@@ -96,7 +95,7 @@ data-contact-context="product"
 
 - All three channels render from config only.
 - Product enquiry text includes product name, SKU, selected colour, selected size and product URL.
-- Missing channels render disabled actions plus "Contact details coming soon" rather than fake links.
+- Missing channels render no fake links plus "Contact details coming soon" instead.
 - Links open correctly on mobile and desktop.
 - No duplicate hardcoded contact strings in components.
 - Missing values never break the page.

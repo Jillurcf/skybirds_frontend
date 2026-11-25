@@ -6,12 +6,14 @@ import { ManufacturingProcess } from '@/components/sections/manufacturing-proces
 import { ManufacturingQuality } from '@/components/sections/manufacturing-quality';
 import { PageHero } from '@/components/sections/page-hero';
 import { getManufacturingContent } from '@/lib/repository';
+import { createPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: 'Manufacturing | SKY BIRDS',
   description:
-    'Explore SKY BIRDS manufacturing capabilities — from fabric selection and pattern making to quality inspection and packaging.'
-};
+    'Explore SKY BIRDS manufacturing capabilities — from fabric selection and pattern making to quality inspection and packaging.',
+  path: '/manufacturing'
+});
 
 export default async function ManufacturingPage() {
   const content = await getManufacturingContent();

@@ -22,6 +22,7 @@ export function WebGLGate({ className, images = [] }: { className?: string; imag
   const reducedMotion = useReducedMotion() ?? false;
 
   const handleContextLost = useCallback(() => setFailed(true), []);
+  const handleLoadError = useCallback(() => setFailed(true), []);
 
   useEffect(() => {
     const updateQuality = () => setQuality(getHeroQuality(window.innerWidth));
@@ -77,6 +78,7 @@ export function WebGLGate({ className, images = [] }: { className?: string; imag
               quality={quality}
               reducedMotion={reducedMotion}
               onContextLost={handleContextLost}
+              onLoadError={handleLoadError}
             />
           </Suspense>
         </WebGLBoundary>

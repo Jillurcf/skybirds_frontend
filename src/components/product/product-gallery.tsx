@@ -123,6 +123,10 @@ export function ProductGallery({
         ) : null}
       </div>
 
+      <p aria-live="polite" className="sr-only">
+        Image {safeIndex + 1} of {images.length}: {activeImage.view ?? 'View'}
+      </p>
+
       {images.length > 1 ? (
         <ul
           className="mt-md flex gap-sm overflow-x-auto pb-sm"

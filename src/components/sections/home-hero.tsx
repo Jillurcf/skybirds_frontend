@@ -49,7 +49,7 @@ export function HomeHero({ content, lookbookImages = [] }: HomeHeroProps) {
 
       <a
         href="#brand-introduction"
-        className="hero-scroll-cue absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-2 text-[10px] uppercase tracking-editorial text-ivory/75 transition-colors duration-fast hover:text-ivory md:inline-flex"
+        className="hero-scroll-cue absolute bottom-6 left-1/2 z-10 hidden min-h-11 -translate-x-1/2 items-center gap-2 text-[10px] uppercase tracking-editorial text-ivory/75 transition-colors duration-fast hover:text-ivory md:inline-flex"
       >
         Scroll to discover
         <span aria-hidden="true" className="h-px w-8 bg-rose-gold" />

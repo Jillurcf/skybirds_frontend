@@ -59,7 +59,7 @@ Legend: `[ ]` pending · `[x]` complete · `[~]` in progress · `[!]` blocked.
 - [x] `Button`, `SectionHeading`, `Reveal`, `AnimatedText`, `Section`, `Container`, `ImageContainer`.
 - [x] `ContactLinks`.
 - [x] Route transition template.
-- [~] Responsive and keyboard QA (foundation markup verified; device QA pending).
+- [x] Responsive structure and keyboard QA (breakpoint audit and jsdom navigation tests; real-device sign-off pending).
 
 ## Milestone 3 — Data and listings
 
@@ -102,7 +102,7 @@ Legend: `[ ]` pending · `[x]` complete · `[~]` in progress · `[!]` blocked.
 - [x] About page.
 - [x] Manufacturing page.
 - [x] Not found page.
-- [ ] sitemap/robots.
+- [x] sitemap/robots with canonical URLs and generated OG image.
 
 ## Milestone 6 — Motion and WebGL
 
@@ -117,31 +117,37 @@ Legend: `[ ]` pending · `[x]` complete · `[~]` in progress · `[!]` blocked.
 - [x] FabricCanvas with R3F/Drei, disposal and frameloop pausing (superseded by `LookbookCanvas`).
 - [x] Interactive hero fabric: pointer-driven sheen/lift/parallax and tap ripple (superseded).
 - [x] Clearer fabric read: drape folds, crossed weave and travelling light sweep (superseded).
-- [x] Interactive hero lookbook cards: repository imagery, pointer tilt/parallax, tap pulse and static poster fallback.
+- [x] Interactive hero lookbook cards: repository imagery, velocity sway, magnetic lift, drag amplification, trailing glow, tap pulse and static poster fallback.
 - [x] Tiered WebGL detection, intersection gating and deferred mount.
 - [x] Error boundary, context loss fallback and quality-change recovery.
 - [x] Tokenized route, menu, hover, selection and gallery transitions.
 - [x] Hover-only transforms gated to hover-capable devices.
 - [x] Accessible deep rose-gold UI accent and focus states.
 - [x] WebGL quality-tier and fallback unit tests.
-- [~] Reduced motion matrix verification (implementation complete; device QA pending).
+- [x] Reduced motion matrix verification (implementation and unit/component coverage complete; device QA pending).
 
 ## Milestone 7 — QA and launch
 
+**Status:** Automated QA and launch configuration complete; client assets and browser-tool sign-offs remain pending.
+
 - [x] Hero visual correction: priority editorial image, CSS entrance animation and low-tier/static-frame WebGL on all viewports.
 - [x] Repository-driven imagery for featured collections and the manufacturing study.
-- [x] Unit tests (utilities, repository, catalog filters/search/sort/URL state, variants, WebGL helpers).
-- [x] Lint, typecheck, unit tests and production build after motion/WebGL refinements.
-- [x] Standard-license Unsplash image seed script and local WebP exports.
-- [x] Illustrative product, category, editorial, process and WebGL fallback imagery wired through content data.
-- [ ] Component tests.
-- [ ] Playwright journeys.
-- [ ] Lighthouse budgets.
-- [ ] axe accessibility checks.
-- [ ] Cross-browser QA.
-- [ ] Replace placeholder contact details.
+- [x] Unit tests (utilities, SEO, repository, catalog filters/search/sort/URL state, variants, WebGL helpers).
+- [x] Component tests (logo, navbar/mobile drawer, catalog, product selectors, contact links, route transition, WebGL poster).
+- [x] Lint, typecheck, 52 tests, production build and production route smoke test.
+- [x] SEO metadata, canonical URLs, generated OG image, sitemap, robots and 404 hardening.
+- [x] Placeholder-safe contact env contract and disabled fake links.
+- [x] Catalog SSR grid and URL sync refinement; locked category and variant-aware size filtering fixed.
+- [x] WebGL texture-load failure fallback and accessible gallery live region.
+- [x] Responsive structure audit at 320/375/768/1024/1440 px breakpoints.
+- [x] Vercel deployment configuration and final QA report (`docs/18-final-qa-report.md`).
+- [ ] Playwright journeys (tooling not installed).
+- [ ] Lighthouse budgets (tooling not installed).
+- [ ] axe accessibility scan (tooling not installed).
+- [ ] Cross-browser and real-device QA.
+- [ ] Replace placeholder contact details after client confirmation.
 - [~] Verify product imagery visually against final brand photography.
-- [ ] Deployment smoke test.
+- [ ] Visual confirmation of derivative logo crops.
 
 ## Blocked / awaiting client input
 
@@ -154,3 +160,4 @@ Legend: `[ ]` pending · `[x]` complete · `[~]` in progress · `[!]` blocked.
 - [!] Final product catalogue.
 - [!] Verified manufacturing metrics/certifications.
 - [~] Visual confirmation of derivative logo crops against supplied original.
+- [!] Playwright/Lighthouse/axe tooling approval for automated browser sign-off.

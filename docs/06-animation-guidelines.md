@@ -62,7 +62,8 @@ Preferred approach:
 
 1. Static editorial image baseline and CSS particles remain readable without WebGL.
 2. Optional WebGL portrait cards use repository-driven fashion imagery, never a separate product model.
-3. Cards float slowly and tilt toward the pointer; tap/click adds one brief pulse.
+3. Cards float slowly, tilt toward the pointer and drift faster with pointer velocity; holding the pointer down amplifies the movement.
+4. A soft rose-gold glow trails the pointer behind the cards; tap/click adds one brief pulse.
 
 Constraints:
 
@@ -167,7 +168,7 @@ Constraints:
 - `HeroReveal` coordinates emblem scale/fade, wordmark and eyebrow lift, two masked headline lines, supporting copy and CTA underline draw with CSS keyframes matched to motion tokens.
 - `HomeHero` adds a priority editorial image, a slow image drift and editorial frame details so the composition remains complete without WebGL or JavaScript.
 - `ParticleField` renders 12–14 deterministic motes on mobile and 18 on larger viewports, hidden under reduced motion.
-- `LookbookCanvas` renders three portrait cards on low tier and four on high tier, using repository-driven editorial imagery. Cards drift on independent cycles and tilt/parallax toward the pointer; pointerdown/tap adds a short depth pulse. Rendering pauses when off-screen or when the tab is hidden; reduced motion uses a single demand frame with interaction listeners disabled.
+- `LookbookCanvas` renders three portrait cards on low tier and four on high tier, using repository-driven editorial imagery. Cards drift on independent cycles, tilt/parallax toward the pointer, respond to pointer velocity and move magnetically when the pointer is near. Holding the pointer down amplifies movement; a rose-gold glow trails the pointer behind the cards. Rendering pauses when off-screen or when the tab is hidden; reduced motion uses a single demand frame with interaction listeners disabled.
 - `WebGLGate` waits for intersection and an 800 ms idle window, resolves to a low tier below 1024 px and the full scene on desktops. Context loss and runtime errors fall back to `LookbookPoster`.
 - `ParallaxImage` scrubs an overscaled image from -6% to 6% vertical movement with scale 1.1 → 1.08.
 - `HorizontalEditorial` pins only at `min-width: 1024px`; mobile and reduced-motion visitors receive a stacked, static list.

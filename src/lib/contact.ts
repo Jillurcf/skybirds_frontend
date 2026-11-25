@@ -30,32 +30,32 @@ export function buildMailtoHref(email: string, subject = '', body = ''): string 
   return `mailto:${email}${query ? `?${query}` : ''}`;
 }
 
+export function hasContactDetails(value: string | undefined): boolean {
+  if (!value?.trim()) return false;
+  return !value.includes('XXXX') && !value.includes('example.com');
+}
+
 export function buildContactChannels(details: ContactDetails): ContactChannel[] {
   const channels: ContactChannel[] = [
     {
       label: 'Phone',
       value: details.phone,
-      href: buildPhoneHref(details.phone),
+      href: hasContactDetails(details.phone) ? buildPhoneHref(details.phone) : '',
       icon: 'phone'
     },
     {
       label: 'WhatsApp',
       value: details.whatsapp,
-      href: buildWhatsAppHref(details.whatsapp),
+      href: hasContactDetails(details.whatsapp) ? buildWhatsAppHref(details.whatsapp) : '',
       icon: 'whatsapp'
     },
     {
       label: 'Email',
       value: details.email,
-      href: buildMailtoHref(details.email),
+      href: hasContactDetails(details.email) ? buildMailtoHref(details.email) : '',
       icon: 'mail'
     }
   ];
 
   return channels.map((channel) => ({ ...channel, available: Boolean(channel.href) }));
-}
-
-export function hasContactDetails(value: string | undefined): boolean {
-  if (!value) return false;
-  return !value.includes('XXXX') && !value.includes('example.com');
 }

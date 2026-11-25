@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { CatalogExplorer } from '@/components/catalog/catalog-explorer';
@@ -58,9 +57,7 @@ export function CatalogPageShell({
         <p className="lede mt-md">{description}</p>
       </div>
 
-      <Suspense fallback={<p className="py-2xl text-sm text-charcoal/75">Loading catalogue controls…</p>}>
-        <CatalogExplorer products={products} categories={categories} lockedCategory={lockedCategory} />
-      </Suspense>
+      <CatalogExplorer products={products} categories={categories} lockedCategory={lockedCategory} />
     </Section>
   );
 }

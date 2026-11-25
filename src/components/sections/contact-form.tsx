@@ -30,6 +30,7 @@ const initialValues: FormValues = {
 export function ContactForm({ content }: ContactFormProps) {
   const [values, setValues] = useState<FormValues>(initialValues);
   const [errors, setErrors] = useState<Partial<Record<keyof FormValues, string>>>({});
+  const [status, setStatus] = useState('');
   const emailAvailable = hasContactDetails(contact.email);
 
   const onChange = (field: keyof FormValues) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -64,7 +65,10 @@ export function ContactForm({ content }: ContactFormProps) {
     ].join('\n');
 
     const href = buildMailtoHref(contact.email, subject, body);
-    if (href) window.location.href = href;
+    if (href) {
+      setStatus('Your email app should open with the message ready to send.');
+      window.location.href = href;
+    }
   };
 
   const inputClass =
@@ -94,7 +98,7 @@ export function ContactForm({ content }: ContactFormProps) {
                   aria-invalid={Boolean(errors.name)}
                   aria-describedby={errors.name ? 'contact-name-error' : undefined}
                 />
-                {errors.name ? <span id="contact-name-error" className="text-xs text-[#8B3A3A]">{errors.name}</span> : null}
+                {errors.name ? <span id="contact-name-error" className="text-xs text-rose-gold-deep">{errors.name}</span> : null}
               </label>
               <label className="flex flex-col gap-sm text-sm text-charcoal/75">
                 <span>Email <span className="text-rose-gold-deep">*</span></span>
@@ -108,7 +112,7 @@ export function ContactForm({ content }: ContactFormProps) {
                   aria-invalid={Boolean(errors.email)}
                   aria-describedby={errors.email ? 'contact-email-error' : undefined}
                 />
-                {errors.email ? <span id="contact-email-error" className="text-xs text-[#8B3A3A]">{errors.email}</span> : null}
+                {errors.email ? <span id="contact-email-error" className="text-xs text-rose-gold-deep">{errors.email}</span> : null}
               </label>
             </div>
             <label className="mt-md flex flex-col gap-sm text-sm text-charcoal/75">
@@ -132,7 +136,7 @@ export function ContactForm({ content }: ContactFormProps) {
                 aria-invalid={Boolean(errors.message)}
                 aria-describedby={errors.message ? 'contact-message-error' : undefined}
               />
-              {errors.message ? <span id="contact-message-error" className="text-xs text-[#8B3A3A]">{errors.message}</span> : null}
+              {errors.message ? <span id="contact-message-error" className="text-xs text-rose-gold-deep">{errors.message}</span> : null}
             </label>
             <div className="mt-lg flex flex-col gap-md sm:flex-row sm:items-center">
               <Button type="submit" variant="accent" size="lg" disabled={!emailAvailable}>
@@ -141,6 +145,9 @@ export function ContactForm({ content }: ContactFormProps) {
               {!emailAvailable ? (
                 <p className="text-sm text-charcoal/75">Email details coming soon.</p>
               ) : null}
+              <p aria-live="polite" className="text-sm text-charcoal/75">
+                {status}
+              </p>
             </div>
           </form>
         </Reveal>

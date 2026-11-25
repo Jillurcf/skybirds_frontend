@@ -12,6 +12,10 @@
 | `/products/jeans` | Jeans collection | Reuses listing | Fixed category |
 | `/products/trousers` | Trousers collection | Reuses listing | Fixed category |
 | `/products/jackets` | Jackets collection | Reuses listing | Fixed category |
+| `/products/polo-shirts` | Polo Shirts collection | Reuses listing | Fixed category |
+| `/products/other` | Other Apparel collection | Reuses listing | Fixed category |
+| `/robots.txt` | Crawler directives | Generated route | Points to sitemap |
+| `/sitemap.xml` | Public URL index | Generated route | Built from repository |
 | `/about` | About Us | Server + reveals | Full logo brand panel |
 | `/manufacturing` | Manufacturing | Server + reveals | Process and capability |
 | `/contact` | Contact | Server + client optional | Phone/WhatsApp/email |
@@ -29,6 +33,8 @@ T-Shirts
 Jeans
 Trousers
 Jackets
+Polo Shirts
+Other Apparel
 About
 Manufacturing
 Contact
@@ -128,4 +134,5 @@ Hero CTAs target `#collections` and `#craftsmanship`; collection links target th
 - Active link uses `aria-current="page"`.
 - Route transitions must not steal focus unexpectedly.
 - Skip link targets `main` on each page.
-- 404 includes navigation back home and to products.
+- 404 uses `noindex, nofollow`, an h1, and navigation back home and to products.
+- `npm run verify:routes` checks all 26 public routes plus 404, robots and sitemap against the production server.

@@ -7,12 +7,14 @@ import { AboutPhilosophy } from '@/components/sections/about-philosophy';
 import { AboutValues } from '@/components/sections/about-values';
 import { PageHero } from '@/components/sections/page-hero';
 import { getAboutContent } from '@/lib/repository';
+import { createPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: 'About Us | SKY BIRDS',
   description:
-    'Learn about SKY BIRDS FASHION BD — our brand philosophy, mission, values and commitment to premium menswear craftsmanship.'
-};
+    'Learn about SKY BIRDS FASHION BD — our brand philosophy, mission, values and commitment to premium menswear craftsmanship.',
+  path: '/about'
+});
 
 export default async function AboutPage() {
   const content = await getAboutContent();

@@ -35,7 +35,7 @@ Acceptance:
 
 ## Milestone 2 — Design system and shared layout
 
-**Status:** Partially complete; refinement remains.
+**Status:** Complete for phase 1; real-device QA remains a launch limitation.
 
 Estimated: 2–3 days.
 
@@ -53,6 +53,8 @@ Acceptance:
 
 ## Milestone 3 — Data layer and product listing
 
+**Status:** Complete for sample data; final catalogue and photography pending.
+
 Estimated: 2–3 days.
 
 - Product/category types and local data.
@@ -69,7 +71,7 @@ Acceptance:
 
 ## Milestone 4 — Product detail and contact
 
-Estimated: 2–3 days. **Status:** Premium product detail complete; Contact page still pending.
+Estimated: 2–3 days. **Status:** Complete; contact values remain placeholder-safe until client confirmation.
 
 - Dynamic product route with enriched metadata.
 - Thumbnail gallery with lightbox and Motion transitions.
@@ -85,6 +87,8 @@ Acceptance:
 
 ## Milestone 5 — Editorial pages
 
+**Status:** Complete, including sitemap, robots and route-level SEO.
+
 Estimated: 2–3 days.
 
 - Homepage sections.
@@ -99,6 +103,8 @@ Acceptance:
 - Editorial hierarchy matches brand guidelines.
 
 ## Milestone 6 — Motion and WebGL
+
+**Status:** Implementation and automated fallback tests complete; device/WebGL performance QA pending.
 
 Estimated: 3–5 days.
 
@@ -117,18 +123,21 @@ Acceptance:
 
 ## Milestone 7 — QA and launch readiness
 
+**Status:** Code and automated QA complete; external sign-offs remain blocked on client assets and browser tooling.
+
 Estimated: 2–3 days.
 
-- Unit/component/E2E tests.
-- Lighthouse and axe checks.
-- Cross-browser/device QA.
-- Content/contact placeholders replaced.
-- Deployment configured.
+- Unit and component tests.
+- Production route/SEO smoke verification.
+- Responsive structure audit across 320, 375, 768, 1024 and 1440 px breakpoints.
+- Vercel deployment configuration and environment variable contract.
+- Final QA report and known limitations documented.
 
 Acceptance:
 
-- All checks pass.
-- Launch checklist in `14-deployment-guide.md` complete.
+- `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build` and `npm run verify:routes` pass.
+- Launch checklist in `14-deployment-guide.md` distinguishes verified items from pending client/browser sign-offs.
+- No cart, checkout, backend or server form introduced.
 
 ## Total estimated duration
 
@@ -143,4 +152,4 @@ Approximately 15–24 working days depending on asset readiness and review cycle
 
 ## Recommended next milestone
 
-**Milestone 2 — Design system and shared layout refinement**, then Milestone 3 data and listings.
+Launch sign-off once contact details, final photography/catalogue and verified manufacturing data are supplied, followed by an optional future backend/CMS milestone described in `15-future-backend-integration.md`.

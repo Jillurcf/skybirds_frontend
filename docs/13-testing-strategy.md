@@ -1,22 +1,25 @@
 # 13 — Testing Strategy
 
-## Milestone 1 status
+## Milestone 7 status
 
-Vitest is configured with `@` alias support. The current suite contains 31 tests covering `cn()`, contact URL helpers, WebGL fallback behavior and quality tiers, repository access, catalog filters, search, sorting and URL state, variants and product enquiry messages. Component and E2E suites remain planned; no headless browser is installed in the current environment.
+Vitest uses two projects: Node for utility tests and jsdom with React Testing Library for component tests. The final local suite contains 52 passing tests across 16 files, covering `cn()`, SEO metadata, contact URL helpers and placeholder detection, WebGL fallback/quality tiers, repository access, catalog filters/search/sort/URL state, variant awareness, product enquiry messages, the logo, navbar/mobile navigation, catalog explorer, product selectors, contact links, route transitions and the static WebGL poster.
+
+`npm run verify:routes` checks the built production server: 26 public routes, 404, `robots.txt` and `sitemap.xml`. Playwright, Lighthouse CI and axe are not installed; E2E, performance and automated accessibility scans remain documented limitations rather than claimed passes.
 
 ## Test layers
 
-| Layer | Tooling (planned) | Scope |
-| --- | --- | --- |
-| Type safety | `tsc --noEmit` | Whole project |
-| Lint | ESLint + Next config | Code quality |
-| Format | Prettier check | Consistency |
-| Unit | Vitest + React Testing Library | Utilities, data mapping |
-| Component | React Testing Library | Selectors, cards, filters |
-| E2E | Playwright | Critical user journeys |
-| Build | `next build` | Production compilation |
-| Performance | Lighthouse CI | Web vitals budgets |
-| Accessibility | axe + manual | WCAG AA |
+| Layer | Tooling | Scope | Status |
+| --- | --- | --- | --- |
+| Type safety | `tsc --noEmit` | Whole project | Passing |
+| Lint | ESLint + Next config | Code quality | Passing |
+| Unit | Vitest (Node) | Utilities, data mapping, SEO | Passing |
+| Component | Vitest + React Testing Library (jsdom) | Selectors, nav, filters, fallback | Passing |
+| Route smoke | `verify:routes.mjs` + `next start` | Status codes and SEO markers | Passing |
+| Build | `next build` | Production compilation | Passing |
+| Format | Prettier check | Consistency | Available, not required by QA gate |
+| E2E | Playwright | Critical user journeys | Not installed |
+| Performance | Lighthouse CI | Web vitals budgets | Not installed |
+| Accessibility | axe + manual | WCAG AA | Runner not installed; manual checks recorded |
 
 ## Unit tests
 
@@ -36,6 +39,10 @@ Vitest is configured with `@` alias support. The current suite contains 31 tests
 - WebGL quality tiers for low and high viewport widths; `poster` remains the fallback state only.
 
 ## Component tests
+
+Implemented: logo asset/alt variants, desktop and mobile navigation access, catalog SSR grid/URL sync/locked category, product colour/size radio semantics, contact hrefs/attributes/placeholder state, route transition visibility and decorative WebGL poster.
+
+Still recommended when a browser runner is available:
 
 ### ProductCard
 
@@ -102,9 +109,10 @@ npm run lint
 npm run typecheck
 npm run test
 npm run build
+npm run verify:routes
 ```
 
-Add `npm run test:e2e` when Playwright is configured.
+All five commands were run against the final code. Add `npm run test:e2e` when Playwright is configured.
 
 ## Visual QA checklist
 

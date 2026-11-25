@@ -127,4 +127,19 @@ describe('catalog options', () => {
     expect(hasActiveCatalogFilters({ ...defaultCatalogFilters, sizes: ['M'] })).toBe(true);
     expect(hasActiveCatalogFilters({ ...defaultCatalogFilters, sort: 'sku-asc' })).toBe(true);
   });
+
+  it('does not treat a locked category as an active user filter', () => {
+    const filters = parseCatalogFilters(new URLSearchParams(), options, 'shirts');
+    expect(hasActiveCatalogFilters(filters, 'shirts')).toBe(false);
+    expect(hasActiveCatalogFilters({ ...filters, sizes: ['M'] }, 'shirts')).toBe(true);
+  });
+
+  it('respects size availability for the selected colour variant', () => {
+    const result = filterAndSortProducts(products, {
+      ...defaultCatalogFilters,
+      colors: ['Charcoal'],
+      sizes: ['S']
+    });
+    expect(result.map((product) => product.slug)).not.toContain('the-atelier-shirt');
+  });
 });

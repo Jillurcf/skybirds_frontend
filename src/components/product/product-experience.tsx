@@ -6,7 +6,7 @@ import { motion, useReducedMotion, type Variants } from 'motion/react';
 import { ProductEnquiryLinks } from '@/components/product/product-enquiry-links';
 import { ProductGallery } from '@/components/product/product-gallery';
 import { ProductOptions } from '@/components/product/product-options';
-import { siteConfig } from '@/config/site';
+import { isPlaceholderSiteUrl, siteConfig } from '@/config/site';
 import { MOTION_DURATION, MOTION_EASE, MOTION_STAGGER } from '@/lib/animation';
 import { formatCategoryLabel } from '@/lib/format';
 import { getAvailableSizesForColor, getGalleryImagesForColor } from '@/lib/product';
@@ -41,7 +41,9 @@ export function ProductExperience({ product }: ProductExperienceProps) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const images = getGalleryImagesForColor(product, selectedColor?.name);
-  const productUrl = siteConfig.url ? `${siteConfig.url.replace(/\/$/, '')}${pathname}` : pathname;
+  const productUrl = isPlaceholderSiteUrl()
+    ? undefined
+    : `${siteConfig.url.replace(/\/$/, '')}${pathname}`;
 
   function handleColorChange(color: ColorOption) {
     if (selectedColor?.name === color.name) return;

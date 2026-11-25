@@ -24,7 +24,8 @@ export function ProductEnquiryLinks({ product, selection }: ProductEnquiryLinksP
       href: buildPhoneHref(contact.phone),
       icon: Phone,
       variant: 'default' as const,
-      external: false
+      external: false,
+      available: contact.channels.find((item) => item.icon === 'phone')?.available ?? false
     },
     {
       label: 'WhatsApp Inquiry',
@@ -32,7 +33,8 @@ export function ProductEnquiryLinks({ product, selection }: ProductEnquiryLinksP
       href: buildWhatsAppHref(contact.whatsapp, messages.whatsapp),
       icon: MessageCircle,
       variant: 'accent' as const,
-      external: true
+      external: true,
+      available: contact.channels.find((item) => item.icon === 'whatsapp')?.available ?? false
     },
     {
       label: 'Email Inquiry',
@@ -40,11 +42,12 @@ export function ProductEnquiryLinks({ product, selection }: ProductEnquiryLinksP
       href: buildMailtoHref(contact.email, messages.subject, messages.body),
       icon: Mail,
       variant: 'outline' as const,
-      external: false
+      external: false,
+      available: contact.channels.find((item) => item.icon === 'mail')?.available ?? false
     }
   ];
 
-  const missingDetails = channels.every((item) => !item.href);
+  const missingDetails = channels.every((item) => !item.available || !item.href);
 
   return (
     <div>
@@ -53,7 +56,7 @@ export function ProductEnquiryLinks({ product, selection }: ProductEnquiryLinksP
           const Icon = item.icon;
           const label = `${item.label} about ${product.name} (${product.sku})`;
 
-          if (!item.href) {
+          if (!item.available || !item.href) {
             return (
               <Button key={item.channel} variant={item.variant} disabled aria-label={label}>
                 <Icon aria-hidden="true" />

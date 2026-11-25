@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ProductDetail } from '@/components/product/product-detail';
-import { siteConfig } from '@/config/site';
 import { getProductBySlug, getProducts, getRelatedProducts } from '@/lib/repository';
+import { createPageMetadata } from '@/lib/seo';
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -18,41 +18,31 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const product = await getProductBySlug(slug);
 
   if (!product) {
-    return { title: 'Product not found | SKY BIRDS' };
+    return {
+      ...createPageMetadata({
+        title: 'Product not found | SKY BIRDS',
+        description: 'This SKY BIRDS product is not available.',
+        path: `/products/${slug}`
+      }),
+      robots: { index: false, follow: false }
+    };
   }
 
-  const path = `/products/${product.slug}`;
-  const url = siteConfig.url ? `${siteConfig.url.replace(/\/$/, '')}${path}` : undefined;
   const image = product.images.find((item) => item.src);
 
-  return {
+  return createPageMetadata({
     title: product.meta.title,
     description: product.meta.description,
-    alternates: url ? { canonical: path } : undefined,
-    openGraph: {
-      type: 'website',
-      locale: siteConfig.locale,
-      siteName: siteConfig.name,
-      title: product.meta.title,
-      description: product.meta.description,
-      url,
-      images: image
-        ? [
-            {
-              url: image.src,
-              width: image.width,
-              height: image.height,
-              alt: image.alt
-            }
-          ]
-        : undefined
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: product.meta.title,
-      description: product.meta.description
-    }
-  };
+    path: `/products/${product.slug}`,
+    image: image
+      ? {
+          url: image.src,
+          width: image.width,
+          height: image.height,
+          alt: image.alt
+        }
+      : undefined
+  });
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {

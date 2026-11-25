@@ -153,7 +153,7 @@ No product 3D canvas is mounted. Placeholder photography, colour-aware frames an
 
 ### Implemented homepage scene
 
-`LookbookCanvas` is loaded only by `WebGLGate` after idle and capability checks. `HomePage` derives up to four portrait image URLs from `getHomeContent()` and passes them through `HomeHero` → `WebGLGate` → `LookbookCanvas`; components never import raw data directly. `TextureLoader` loads a dedicated texture set per canvas mount, sets sRGB/colour filters, calls `invalidate()` when ready and disposes every texture on unmount. `getHeroPointer()` normalizes window pointer/touch coordinates against the hero bounds so movement over hero copy still drives the scene. A shared pointer ref is damped in `PointerDriver`, then read by each `LookbookCard` for position/rotation and by `CameraRig` for parallax; pointerdown/tap triggers a short pulse. No React state is updated during pointer movement. Canvas `frameloop` switches to `never` when the hero leaves the viewport or the tab is hidden, and to `demand` for one static frame under reduced motion, where pointer listeners are not attached. Declarative geometries/materials are disposed by React Three Fiber.
+`LookbookCanvas` is loaded only by `WebGLGate` after idle and capability checks. `HomePage` derives up to four portrait image URLs from `getHomeContent()` and passes them through `HomeHero` → `WebGLGate` → `LookbookCanvas`; components never import raw data directly. `TextureLoader` loads a dedicated texture set per canvas mount, sets sRGB/colour filters, calls `invalidate()` when ready and disposes every texture on unmount. `getHeroPointer()` normalizes window pointer/touch coordinates against the hero bounds so movement over hero copy still drives the scene. A shared pointer ref is damped in `PointerDriver`, which also derives velocity from the position error and eases a drag target. `LookbookCard` maps the pointer to world coordinates for magnetic proximity lift, then combines it with velocity sway, drag amplification and tap pulse in position/rotation/scale. `PointerGlow` trails the pointer on a background additive plane; `CameraRig` adds a larger damped parallax and look-at shift. No React state is updated during pointer movement. Canvas `frameloop` switches to `never` when the hero leaves the viewport or the tab is hidden, and to `demand` for one static frame under reduced motion, where pointer listeners are not attached. Declarative geometries/materials are disposed by React Three Fiber.
 
 `HomeHero` renders a priority editorial image beneath the canvas so the hero is always complete before WebGL is ready and when WebGL is unavailable. `WebGLGate` resolves `low` below 1024 px and `high` for desktops through `getHeroQuality()`. It waits for both hero intersection and an 800 ms idle window; browsers without `requestIdleCallback` use the same deferred fallback. No WebGL, runtime errors and context loss render `LookbookPoster`, a CSS collage of the same repository imagery. Context-loss detection listens on the stable container in capture phase, and quality changes reset a failed state so a later viewport change can recover.
 
@@ -178,27 +178,33 @@ No product 3D canvas is mounted. Placeholder photography, colour-aware frames an
 
 | File | Contents |
 | --- | --- |
-| `site.ts` | Name, tagline, URL, metadata defaults |
-| `contact.ts` | Phone, WhatsApp, email, address, hours |
-| `navigation.ts` | Nav and footer link arrays |
+| `site.ts` | Name, tagline, canonical URL resolution, OG image path |
+| `contact.ts` | Env-backed phone, WhatsApp, email, address, hours and channels |
+| `navigation.ts` | Nav and footer link arrays including all category routes |
 | `animations.ts` | Durations, easings, stagger values |
 
 ## Environment
 
 ```env
-NEXT_PUBLIC_SITE_URL=https://example.com
+NEXT_PUBLIC_SITE_URL=https://skyybirds.example
+NEXT_PUBLIC_PHONE=
 NEXT_PUBLIC_WHATSAPP_NUMBER=
 NEXT_PUBLIC_CONTACT_EMAIL=
+NEXT_PUBLIC_ADDRESS=
+NEXT_PUBLIC_BUSINESS_HOURS=
 ```
 
-Public contact values may live directly in `contact.ts` if no environment override is needed. Never put private credentials in `NEXT_PUBLIC_*`.
+`resolveSiteUrl()` prefers `NEXT_PUBLIC_SITE_URL`, then Vercel's `VERCEL_URL`, then the documented placeholder. The placeholder is never presented as a live contact channel. Never put private credentials in `NEXT_PUBLIC_*`.
 
 ## SEO architecture
 
-- `generateMetadata` on dynamic product routes.
-- Root metadata in `layout.tsx`.
-- `app/sitemap.ts` and `app/robots.ts` after routes exist.
-- Open Graph image generated from brand assets later.
+- `src/lib/seo.ts` exposes `createPageMetadata()` so every route shares canonical, Open Graph and Twitter defaults.
+- `root layout` sets `metadataBase`, default metadata and `Organization`/`WebSite` JSON-LD via `StructuredData`.
+- Every static route and all product/category routes export metadata; product pages add `Product` and `BreadcrumbList` JSON-LD.
+- `public/images/brand/sky-birds-og.png` is the generated 1200×630 social image, reproducible with `npm run images:og`.
+- `src/app/sitemap.ts` enumerates all public routes from the repository; `src/app/robots.ts` disallows private paths and points to the sitemap.
+- 404 metadata is `noindex, nofollow` and the page offers branded recovery links.
+- `npm run verify:routes` starts the production server and smoke-checks status codes, canonical tags, OG images, main landmarks, h1s, 404 behavior, `robots.txt` and `sitemap.xml`.
 
 ## Future backend seam
 

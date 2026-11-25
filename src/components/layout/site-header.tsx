@@ -60,7 +60,7 @@ export function SiteHeader() {
                 type="button"
                 className={cn(
                   'inline-flex min-h-11 items-center gap-1 text-sm text-charcoal transition-colors duration-fast hover:text-rose-gold-deep',
-                  productsActive && 'text-charcoal'
+                  productsActive && 'text-rose-gold-deep'
                 )}
               >
                 Products
@@ -96,6 +96,7 @@ export function SiteHeader() {
             className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-control text-charcoal lg:hidden"
             aria-label="Open navigation menu"
             aria-expanded={menuOpen}
+            aria-controls="mobile-navigation-menu"
             onClick={() => setMenuOpen(true)}
           >
             <Menu aria-hidden="true" className="h-5 w-5" />

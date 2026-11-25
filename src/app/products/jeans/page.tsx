@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import { CategoryCatalog } from '@/components/catalog/category-catalog';
+import { getCategoryMetadata } from '@/lib/page-metadata';
 
-export const metadata: Metadata = {
-  title: 'Jeans | SKY BIRDS',
-  description: 'Explore sample SKY BIRDS jeans. Final photography and specifications are pending.'
-};
+export function generateMetadata(): Promise<Metadata> {
+  return getCategoryMetadata('jeans');
+}
 
 export default function JeansPage() {
   return <CategoryCatalog slug="jeans" />;

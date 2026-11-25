@@ -25,7 +25,7 @@ export function MobileMenu({ open, onOpenChange }: MobileMenuProps) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="overflow-y-auto">
+      <SheetContent id="mobile-navigation-menu" className="overflow-y-auto">
         <SheetHeader>
           <BrandLogo variant="full" width={168} alt="SKY BIRDS FASHION BD" priority />
           <SheetTitle className="sr-only">Site navigation</SheetTitle>

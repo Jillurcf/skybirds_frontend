@@ -11,14 +11,17 @@ SkyBirds/
 │       │   ├── sky-birds-logo-original.jpg
 │       │   ├── sky-birds-logo.png
 │       │   ├── sky-birds-emblem.png
-│       │   ├── sky-birds-icon.png
-│       │   └── skybirds-*.jpg/png          # legacy aliases
+│   │   ├── sky-birds-icon.png
+│   │   ├── sky-birds-og.png            # generated social preview
+│   │   └── skybirds-*.jpg/png          # legacy aliases
 │       ├── products/             # Product imagery by category
 │       ├── categories/           # Category hero imagery
 │       └── editorial/            # Hero, homepage, process and fallback imagery
 ├── scripts/
 │   ├── generate-dummy-images.mjs # Offline illustrated fallback
-│   └── seed-unsplash-images.mjs  # Sourced Unsplash WebP seed
+│   ├── generate-og-image.mjs     # 1200×630 Open Graph image
+│   ├── seed-unsplash-images.mjs  # Sourced Unsplash WebP seed
+│   └── verify-routes.mjs         # Production route/SEO smoke check
 ├── src/
 │   ├── app/
 │   ├── components/
@@ -53,16 +56,17 @@ src/app/
 │   ├── t-shirts/page.tsx            # /products/t-shirts
 │   ├── jeans/page.tsx               # /products/jeans
 │   ├── trousers/page.tsx            # /products/trousers
-│   └── jackets/page.tsx             # /products/jackets
+│   ├── jackets/page.tsx             # /products/jackets
+│   ├── polo-shirts/page.tsx         # /products/polo-shirts
+│   └── other/page.tsx               # /products/other
 ├── about/page.tsx                   # /about
 ├── manufacturing/page.tsx           # /manufacturing
 ├── contact/page.tsx                 # /contact
 ├── not-found.tsx
 ├── icon.png                         # from sky-birds-icon.png
 ├── apple-icon.png                   # from sky-birds-icon.png
-├── opengraph-image.tsx              # planned
-├── sitemap.ts                       # planned
-└── robots.ts                        # planned
+├── sitemap.ts                       # all public routes
+└── robots.ts                        # crawler directives
 ```
 
 ## Component folders
@@ -104,6 +108,8 @@ src/components/
 │   ├── product-experience.tsx
 │   ├── product-gallery.tsx
 │   └── product-options.tsx
+├── seo/
+│   └── structured-data.tsx
 ├── three/
 │   ├── lookbook-canvas.tsx
 │   ├── lookbook-poster.tsx
@@ -177,6 +183,22 @@ src/types/
 
 Added for the product catalogue: animated grid, filters, selectors, enquiry links and placeholder-safe gallery. Added for PROMPT 05: a client `ProductExperience` island that shares colour/size state across `ProductGallery`, `ProductOptions` and `ProductEnquiryLinks`, plus an accessible `Dialog` lightbox.
 
+Added for final QA:
+
+```
+src/
+├── test/setup.ts
+├── vitest.config.ts
+└── components/
+    ├── brand/brand-logo.test.tsx
+    ├── catalog/catalog-explorer.test.tsx
+    ├── layout/contact-links.test.tsx
+    ├── layout/route-transition.test.tsx
+    ├── layout/site-header.test.tsx
+    ├── product/product-options.test.tsx
+    └── three/lookbook-poster.test.tsx
+```
+
 ## Config / data / lib
 
 Implemented in Milestone 1:
@@ -197,6 +219,7 @@ src/lib/
 │   ├── product-enquiry.test.ts
 │   ├── product.test.ts
 │   ├── repository.test.ts
+│   ├── seo.test.ts
 │   └── webgl.test.ts
 ├── animation.ts
 ├── cn.ts
@@ -204,8 +227,10 @@ src/lib/
 ├── contact.ts
 ├── format.ts
 ├── gsap.ts
+├── page-metadata.ts
 ├── product-enquiry.ts
 ├── product.ts
+├── seo.ts
 ├── utils.ts
 └── webgl.ts
 
@@ -265,5 +290,6 @@ import { cn } from '@/lib/utils';
 ## What is intentionally absent now
 
 - Confirmed product photography and final product catalogue.
-- About, Manufacturing and full Contact pages.
 - Verified manufacturing figures and final contact details.
+- Backend, CMS, database, cart and checkout.
+- Playwright, Lighthouse CI and axe runner dependencies.

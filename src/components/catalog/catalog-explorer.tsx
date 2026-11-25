@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { CatalogGrid } from '@/components/catalog/catalog-grid';
@@ -22,6 +22,7 @@ import {
   hasActiveCatalogFilters,
   parseCatalogFilters
 } from '@/lib/catalog';
+import type { CatalogFilters } from '@/types/catalog';
 import type { Category, CategorySlug } from '@/types/category';
 import type { CatalogSort, SizeLabel } from '@/types/catalog';
 import type { Product } from '@/types/product';
@@ -41,32 +42,49 @@ const sortLabels: Record<CatalogSort, string> = {
 
 export function CatalogExplorer({ products, categories, lockedCategory }: CatalogExplorerProps) {
   const pathname = usePathname();
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const searchRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<number | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const filterOptions = useMemo(() => getCatalogFilterOptions(products, categories), [products, categories]);
-  const filters = useMemo(
-    () => parseCatalogFilters(new URLSearchParams(searchParams.toString()), filterOptions, lockedCategory),
-    [searchParams, filterOptions, lockedCategory]
+  const defaultFilters = useMemo(
+    () => parseCatalogFilters(new URLSearchParams(), filterOptions, lockedCategory),
+    [filterOptions, lockedCategory]
   );
+  const [filters, setFilters] = useState<CatalogFilters>(defaultFilters);
+
+  useEffect(() => {
+    const syncFromUrl = () => {
+      setFilters(
+        parseCatalogFilters(new URLSearchParams(window.location.search), filterOptions, lockedCategory)
+      );
+    };
+
+    syncFromUrl();
+    window.addEventListener('popstate', syncFromUrl);
+    return () => window.removeEventListener('popstate', syncFromUrl);
+  }, [filterOptions, lockedCategory]);
+
   const visibleProducts = useMemo(() => filterAndSortProducts(products, filters), [products, filters]);
-  const activeFilters = hasActiveCatalogFilters(filters);
+  const activeFilters = hasActiveCatalogFilters(filters, lockedCategory);
 
   const writeParams = useCallback(
     (mutate: (params: URLSearchParams) => void) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const currentQuery = typeof window === 'undefined' ? '' : window.location.search;
+      const params = new URLSearchParams(currentQuery);
       mutate(params);
-      const query = buildCatalogQuery(
-        parseCatalogFilters(params, filterOptions, lockedCategory),
-        lockedCategory
-      );
+
+      const nextFilters = parseCatalogFilters(params, filterOptions, lockedCategory);
+      const query = buildCatalogQuery(nextFilters, lockedCategory);
       const queryString = query.toString();
-      router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+      const url = queryString ? `${pathname}?${queryString}` : pathname;
+
+      if (typeof window !== 'undefined') {
+        window.history.replaceState(null, '', url);
+      }
+      setFilters(nextFilters);
     },
-    [pathname, router, searchParams, filterOptions, lockedCategory]
+    [pathname, filterOptions, lockedCategory]
   );
 
   const setParam = useCallback(
@@ -142,12 +160,13 @@ export function CatalogExplorer({ products, categories, lockedCategory }: Catalo
     <div className="flex flex-col gap-2xl lg:flex-row lg:items-start">
       <aside aria-label="Product filters" className="hidden w-64 shrink-0 lg:block">
         <div className="sticky top-24 border border-champagne bg-canvas p-lg">
-          <h2 className="mb-lg font-display text-2xl text-charcoal">Refine</h2>
+          <p className="mb-lg font-display text-2xl text-charcoal">Refine</p>
           {controls}
         </div>
       </aside>
 
       <div className="min-w-0 flex-1">
+        <h2 className="sr-only">Collection filters and results</h2>
         <div className="flex flex-col gap-md sm:flex-row sm:items-center sm:justify-between">
           <div className="relative w-full sm:max-w-sm">
             <label htmlFor="catalog-search" className="sr-only">
@@ -158,7 +177,7 @@ export function CatalogExplorer({ products, categories, lockedCategory }: Catalo
               ref={searchRef}
               id="catalog-search"
               type="search"
-              defaultValue={filters.search}
+              defaultValue={defaultFilters.search}
               placeholder="Search name, SKU or collection"
               className="min-h-11 w-full rounded-control border border-champagne bg-canvas pl-11 pr-md text-sm text-charcoal placeholder:text-charcoal/75 focus-visible:border-rose-gold-deep"
             />

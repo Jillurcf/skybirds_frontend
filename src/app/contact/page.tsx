@@ -3,12 +3,14 @@ import { ContactDetails } from '@/components/sections/contact-details';
 import { ContactForm } from '@/components/sections/contact-form';
 import { PageHero } from '@/components/sections/page-hero';
 import { getContactPageContent } from '@/lib/repository';
+import { createPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: 'Contact | SKY BIRDS',
   description:
-    'Contact SKY BIRDS FASHION BD for collection enquiries, manufacturing partnerships or general information. Reach us by phone, WhatsApp or email.'
-};
+    'Contact SKY BIRDS FASHION BD for collection enquiries, manufacturing partnerships or general information. Reach us by phone, WhatsApp or email.',
+  path: '/contact'
+});
 
 export default async function ContactPage() {
   const content = await getContactPageContent();

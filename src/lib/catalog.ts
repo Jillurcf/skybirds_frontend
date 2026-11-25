@@ -1,3 +1,4 @@
+import { getAvailableSizesForColor } from '@/lib/product';
 import type { CatalogColorOption, CatalogFilters, CatalogFilterOptions, CatalogSort, SizeLabel } from '@/types/catalog';
 import type { Category, CategorySlug } from '@/types/category';
 import type { Product } from '@/types/product';
@@ -91,18 +92,25 @@ export function filterAndSortProducts(products: Product[], filters: CatalogFilte
       if (!haystack.includes(query)) return false;
     }
 
-    if (
-      filters.sizes.length > 0 &&
-      !product.sizes.some((size) => size.available && filters.sizes.includes(size.label))
-    ) {
+    const selectedColors = filters.colors.length
+      ? product.colors.filter(
+          (color) => color.available && filters.colors.includes(color.name)
+        )
+      : [];
+
+    if (filters.colors.length > 0 && selectedColors.length === 0) {
       return false;
     }
 
-    if (
-      filters.colors.length > 0 &&
-      !product.colors.some((color) => color.available && filters.colors.includes(color.name))
-    ) {
-      return false;
+    if (filters.sizes.length > 0) {
+      const hasSize = selectedColors.length
+        ? selectedColors.some((color) => {
+            const variantSizes = getAvailableSizesForColor(product, color.name);
+            return filters.sizes.some((size) => variantSizes.includes(size));
+          })
+        : product.sizes.some((size) => size.available && filters.sizes.includes(size.label));
+
+      if (!hasSize) return false;
     }
 
     return true;
@@ -123,10 +131,13 @@ export function filterAndSortProducts(products: Product[], filters: CatalogFilte
   });
 }
 
-export function hasActiveCatalogFilters(filters: CatalogFilters): boolean {
+export function hasActiveCatalogFilters(
+  filters: CatalogFilters,
+  lockedCategory?: CategorySlug
+): boolean {
   return (
     filters.search.length > 0 ||
-    filters.category !== 'all' ||
+    (!lockedCategory && filters.category !== 'all') ||
     filters.sizes.length > 0 ||
     filters.colors.length > 0 ||
     filters.sort !== 'featured'

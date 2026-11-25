@@ -9,12 +9,14 @@ import { ManufacturingCapabilities } from '@/components/sections/manufacturing-c
 import { NewArrivals } from '@/components/sections/new-arrivals';
 import { SignatureMenswear } from '@/components/sections/signature-menswear';
 import { getHomeContent } from '@/lib/repository';
+import { createPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Premium Menswear & Manufacturing',
+export const metadata: Metadata = createPageMetadata({
+  title: 'SKY BIRDS FASHION BD — Premium Menswear & Manufacturing',
   description:
-    'SKY BIRDS FASHION BD — premium men\'s fashion, considered craftsmanship and a clear manufacturing showcase.'
-};
+    'SKY BIRDS FASHION BD — premium men\'s fashion, considered craftsmanship and a clear manufacturing showcase.',
+  path: '/'
+});
 
 export default async function HomePage() {
   const content = await getHomeContent();

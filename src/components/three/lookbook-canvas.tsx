@@ -3,13 +3,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import {
+  AdditiveBlending,
   DoubleSide,
   LinearFilter,
   SRGBColorSpace,
   Texture,
   TextureLoader,
   type Camera,
-  type Group
+  type Group,
+  type Mesh,
+  type ShaderMaterial
 } from 'three';
 import { getHeroPointer, getRecommendedDpr, type HeroQuality } from '@/lib/webgl';
 import { cn } from '@/lib/utils';
@@ -21,6 +24,10 @@ interface LookbookPointer {
   targetY: number;
   strength: number;
   targetStrength: number;
+  velocityX: number;
+  velocityY: number;
+  drag: number;
+  dragTarget: number;
   pulse: number;
 }
 
@@ -45,7 +52,27 @@ const LOW_CARDS: CardConfig[] = [
   { position: [0.1, -0.85, -0.8], rotation: [0.08, 0.1, 0.08], height: 0.95, speed: 0.45, depth: 2 }
 ];
 
-function useLookbookTextures(imageKey: string) {
+const glowVertexShader = `
+  varying vec2 vUv;
+
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const glowFragmentShader = `
+  uniform float uStrength;
+  varying vec2 vUv;
+
+  void main() {
+    float distanceFromCenter = distance(vUv, vec2(0.5));
+    float alpha = smoothstep(0.5, 0.0, distanceFromCenter) * 0.16 * uStrength;
+    gl_FragColor = vec4(0.72, 0.51, 0.44, alpha);
+  }
+`;
+
+function useLookbookTextures(imageKey: string, onLoadError?: () => void) {
   const sources = useMemo(() => imageKey.split('|').filter(Boolean), [imageKey]);
   const [textures, setTextures] = useState<Texture[]>([]);
   const invalidate = useThree((state) => state.invalidate);
@@ -87,14 +114,17 @@ function useLookbookTextures(imageKey: string) {
         invalidate();
       })
       .catch(() => {
-        if (active) setTextures([]);
+        if (active) {
+          setTextures([]);
+          onLoadError?.();
+        }
       });
 
     return () => {
       active = false;
       loaded.forEach((texture) => texture.dispose());
     };
-  }, [sources, invalidate]);
+  }, [sources, invalidate, onLoadError]);
 
   return textures;
 }
@@ -102,15 +132,60 @@ function useLookbookTextures(imageKey: string) {
 function PointerDriver({ getPointer }: { getPointer: () => LookbookPointer }) {
   useFrame((_, delta) => {
     const state = getPointer();
-    const blend = Math.min(delta * 4.5, 1);
+    const blend = Math.min(delta * 5.5, 1);
+    const errorX = state.targetX - state.x;
+    const errorY = state.targetY - state.y;
 
-    state.x += (state.targetX - state.x) * blend;
-    state.y += (state.targetY - state.y) * blend;
+    state.x += errorX * blend;
+    state.y += errorY * blend;
     state.strength += (state.targetStrength - state.strength) * blend;
+    state.velocityX += (errorX - state.velocityX) * blend;
+    state.velocityY += (errorY - state.velocityY) * blend;
+    state.drag += (state.dragTarget - state.drag) * Math.min(delta * 6, 1);
     state.pulse = Math.max(0, state.pulse - delta * 1.1);
   });
 
   return null;
+}
+
+function PointerGlow({ getPointer }: { getPointer: () => LookbookPointer }) {
+  const meshRef = useRef<Mesh>(null);
+  const materialRef = useRef<ShaderMaterial>(null);
+  const viewport = useThree((state) => state.viewport);
+  const uniforms = useMemo(() => ({ uStrength: { value: 0 } }), []);
+
+  useFrame((_, delta) => {
+    const state = getPointer();
+    const blend = Math.min(delta * 3.5, 1);
+
+    if (meshRef.current) {
+      const targetX = state.x * viewport.width * 0.5;
+      const targetY = state.y * viewport.height * 0.5;
+      meshRef.current.position.x += (targetX - meshRef.current.position.x) * blend;
+      meshRef.current.position.y += (targetY - meshRef.current.position.y) * blend;
+      meshRef.current.scale.setScalar(1 + state.drag * 0.5);
+    }
+
+    if (materialRef.current) {
+      const current = materialRef.current.uniforms.uStrength.value as number;
+      materialRef.current.uniforms.uStrength.value = current + (state.strength - current) * blend;
+    }
+  });
+
+  return (
+    <mesh ref={meshRef} position={[0, 0, -1.6]}>
+      <planeGeometry args={[2.4, 2.4]} />
+      <shaderMaterial
+        ref={materialRef}
+        uniforms={uniforms}
+        vertexShader={glowVertexShader}
+        fragmentShader={glowFragmentShader}
+        transparent
+        depthWrite={false}
+        blending={AdditiveBlending}
+      />
+    </mesh>
+  );
 }
 
 function LookbookCard({
@@ -127,6 +202,7 @@ function LookbookCard({
   getPointer: () => LookbookPointer;
 }) {
   const groupRef = useRef<Group>(null);
+  const viewport = useThree((state) => state.viewport);
   const aspect = useMemo(() => {
     const source = texture.image as { width?: number; height?: number } | undefined;
     return source?.width && source?.height ? source.width / source.height : 0.8;
@@ -139,19 +215,43 @@ function LookbookCard({
 
     const state = getPointer();
     const time = clock.elapsedTime;
-    const blend = Math.min(delta * 2.4, 1);
+    const blend = Math.min(delta * 3.2, 1);
     const drift = Math.sin(time * config.speed + index * 1.7) * 0.06;
-    const parallaxX = state.x * (0.14 + config.depth * 0.04) * state.strength;
-    const parallaxY = state.y * (0.1 + config.depth * 0.03) * state.strength;
-    const targetZ = config.position[2] + state.pulse * (0.12 - config.depth * 0.02);
+    const pointerWorldX = state.x * viewport.width * 0.5;
+    const pointerWorldY = state.y * viewport.height * 0.5;
+    const distance = Math.sqrt(
+      (pointerWorldX - config.position[0]) ** 2 + (pointerWorldY - config.position[1]) ** 2
+    );
+    const proximity = Math.exp(-distance * 0.7) * state.strength;
+    const movement = 1 + state.drag * 0.85;
+    const parallaxX =
+      (state.x * (0.3 + config.depth * 0.08) +
+        (pointerWorldX - config.position[0]) * 0.1 * proximity +
+        state.velocityX * 0.22) *
+      state.strength *
+      movement;
+    const parallaxY =
+      (state.y * (0.22 + config.depth * 0.06) +
+        (pointerWorldY - config.position[1]) * 0.08 * proximity -
+        state.velocityY * 0.16) *
+      state.strength *
+      movement;
+    const targetZ =
+      config.position[2] + proximity * 0.35 + state.pulse * (0.2 - config.depth * 0.03) + state.drag * 0.08;
+    const tiltSign = index % 2 === 0 ? 1 : -1;
 
     group.position.x += (config.position[0] + parallaxX - group.position.x) * blend;
     group.position.y += (config.position[1] + drift + parallaxY - group.position.y) * blend;
     group.position.z += (targetZ - group.position.z) * blend;
-    group.rotation.x = config.rotation[0] - state.y * 0.12 * state.strength + Math.sin(time * 0.3 + index) * 0.015;
-    group.rotation.y = config.rotation[1] + state.x * 0.18 * state.strength;
-    group.rotation.z = config.rotation[2] + state.pulse * 0.03 * (index % 2 === 0 ? 1 : -1);
-    group.scale.setScalar(1 + state.pulse * 0.035);
+    group.rotation.x =
+      config.rotation[0] - state.y * 0.24 * state.strength + state.velocityY * 0.18 * state.strength;
+    group.rotation.y =
+      config.rotation[1] + state.x * 0.42 * state.strength + state.velocityX * 0.24 * state.strength;
+    group.rotation.z =
+      config.rotation[2] +
+      (state.pulse + state.drag * 0.4) * 0.05 * tiltSign +
+      state.velocityX * 0.08 * state.strength;
+    group.scale.setScalar(1 + state.pulse * 0.05 + proximity * 0.07 + state.drag * 0.03);
   });
 
   return (
@@ -189,16 +289,21 @@ function CameraRig({
     cameraRef.current = activeCamera;
 
     const state = getPointer();
-    const amount = quality === 'high' ? 0.38 : 0.18;
-    const blend = Math.min(delta * 2.2, 1);
-    const targetX = state.x * amount * (0.45 + state.strength * 0.55);
-    const targetY = 0.05 + state.y * amount * 0.5 + Math.sin(clock.elapsedTime * 0.1) * 0.04;
-    const targetZ = 6 - state.strength * 0.25;
+    const amount = quality === 'high' ? 0.65 : 0.3;
+    const blend = Math.min(delta * 3, 1);
+    const targetX =
+      (state.x * amount + state.velocityX * 0.12) * (0.35 + state.strength * 0.65);
+    const targetY =
+      0.05 +
+      state.y * amount * 0.55 * state.strength -
+      state.velocityY * 0.08 * state.strength +
+      Math.sin(clock.elapsedTime * 0.1) * 0.04;
+    const targetZ = 6 - state.strength * 0.45 - state.drag * 0.15;
 
     activeCamera.position.x += (targetX - activeCamera.position.x) * blend;
     activeCamera.position.y += (targetY - activeCamera.position.y) * blend;
     activeCamera.position.z += (targetZ - activeCamera.position.z) * blend;
-    activeCamera.lookAt(0.6, 0, 0);
+    activeCamera.lookAt(0.6 + state.x * 0.3 * state.strength, state.y * 0.2 * state.strength, 0);
   });
 
   return null;
@@ -207,19 +312,22 @@ function CameraRig({
 function LookbookScene({
   quality,
   imageKey,
-  getPointer
+  getPointer,
+  onLoadError
 }: {
   quality: Exclude<HeroQuality, 'poster'>;
   imageKey: string;
   getPointer: () => LookbookPointer;
+  onLoadError?: () => void;
 }) {
-  const textures = useLookbookTextures(imageKey);
+  const textures = useLookbookTextures(imageKey, onLoadError);
   const cards = quality === 'high' ? HIGH_CARDS : LOW_CARDS;
 
   return (
     <>
       <PointerDriver getPointer={getPointer} />
       <fog attach="fog" args={['#242323', 9, 17]} />
+      <PointerGlow getPointer={getPointer} />
       <CameraRig quality={quality} getPointer={getPointer} />
       {textures.slice(0, cards.length).map((texture, index) => (
         <LookbookCard
@@ -240,6 +348,7 @@ interface LookbookCanvasProps {
   quality?: Exclude<HeroQuality, 'poster'>;
   reducedMotion?: boolean;
   onContextLost?: () => void;
+  onLoadError?: () => void;
   className?: string;
 }
 
@@ -248,6 +357,7 @@ export default function LookbookCanvas({
   quality = 'high',
   reducedMotion = false,
   onContextLost,
+  onLoadError,
   className
 }: LookbookCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -261,6 +371,10 @@ export default function LookbookCanvas({
     targetY: 0,
     strength: 0,
     targetStrength: 0,
+    velocityX: 0,
+    velocityY: 0,
+    drag: 0,
+    dragTarget: 0,
     pulse: 0
   });
   const getPointer = useCallback(() => pointerRef.current, []);
@@ -318,7 +432,14 @@ export default function LookbookCanvas({
     const handleDown = (event: PointerEvent) => {
       const point = getHeroPointer(event.clientX, event.clientY, container.getBoundingClientRect());
       if (!point.inside) return;
-      pointerRef.current.pulse = 1;
+      const state = pointerRef.current;
+      state.pulse = 1;
+      state.drag = 1;
+      state.dragTarget = 1;
+    };
+
+    const handleUp = () => {
+      pointerRef.current.dragTarget = 0;
     };
 
     const handleLeave = () => {
@@ -326,17 +447,23 @@ export default function LookbookCanvas({
       state.targetStrength = 0;
       state.targetX = 0;
       state.targetY = 0;
+      state.drag = 0;
+      state.dragTarget = 0;
       state.pulse = 0;
     };
 
     window.addEventListener('pointermove', handleMove, { passive: true });
     window.addEventListener('pointerdown', handleDown, { passive: true });
+    window.addEventListener('pointerup', handleUp, { passive: true });
+    window.addEventListener('pointercancel', handleUp, { passive: true });
     window.addEventListener('blur', handleLeave);
     document.addEventListener('mouseleave', handleLeave);
 
     return () => {
       window.removeEventListener('pointermove', handleMove);
       window.removeEventListener('pointerdown', handleDown);
+      window.removeEventListener('pointerup', handleUp);
+      window.removeEventListener('pointercancel', handleUp);
       window.removeEventListener('blur', handleLeave);
       document.removeEventListener('mouseleave', handleLeave);
     };
@@ -352,7 +479,12 @@ export default function LookbookCanvas({
         camera={{ position: [0, 0.05, 6], fov: 42 }}
         gl={{ alpha: true, antialias: quality === 'high', powerPreference: 'high-performance' }}
       >
-        <LookbookScene quality={quality} imageKey={imageKey} getPointer={getPointer} />
+        <LookbookScene
+          quality={quality}
+          imageKey={imageKey}
+          getPointer={getPointer}
+          onLoadError={onLoadError}
+        />
       </Canvas>
     </div>
   );

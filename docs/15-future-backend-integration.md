@@ -60,7 +60,7 @@ export async function getProducts() {
 
 ## Contact form evolution
 
-Current: `mailto:` only.
+Current: `mailto:` only, with public contact values injected through `NEXT_PUBLIC_*` env vars and placeholders hidden from live links.
 
 Future:
 
