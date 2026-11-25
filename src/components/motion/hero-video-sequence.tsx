@@ -1,20 +1,17 @@
 'use client';
 
-import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { heroVideoSources } from '@/config/hero-videos';
 import { cn } from '@/lib/utils';
-import type { EditorialImage } from '@/types/content';
 
 const CROSSFADE_LEAD_SECONDS = 1.2;
 
 interface HeroVideoSequenceProps {
-  fallbackImage: EditorialImage;
   className?: string;
 }
 
-export function HeroVideoSequence({ fallbackImage, className }: HeroVideoSequenceProps) {
+export function HeroVideoSequence({ className }: HeroVideoSequenceProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
   const transitioningRef = useRef(false);
@@ -141,8 +138,7 @@ export function HeroVideoSequence({ fallbackImage, className }: HeroVideoSequenc
     [activeIndex]
   );
 
-  const showVideo = !reducedMotion;
-  const videoVisible = showVideo && playing;
+  const videoVisible = playing && !reducedMotion;
 
   return (
     <div
@@ -150,46 +146,34 @@ export function HeroVideoSequence({ fallbackImage, className }: HeroVideoSequenc
       aria-hidden="true"
       className={cn('absolute inset-0 -z-20 overflow-hidden bg-charcoal', className)}
     >
-      <Image
-        src={fallbackImage.src}
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="hero-image-drift object-cover object-center"
-      />
-
-      {showVideo && (
-        <div
-          className={cn(
-            'pointer-events-none absolute inset-0 transition-opacity duration-slow ease-out-soft',
-            videoVisible ? 'opacity-100' : 'opacity-0'
-          )}
-        >
-          {heroVideoSources.map((src, index) => (
-            <video
-              key={src}
-              ref={(node) => {
-                videoRefs.current[index] = node;
-              }}
-              src={src}
-              poster={fallbackImage.src}
-              muted
-              playsInline
-              preload={index === activeIndex || index === nextIndex ? 'auto' : 'metadata'}
-              data-active={index === activeIndex}
-              onTimeUpdate={() => handleTimeUpdate(index)}
-              onPlaying={index === activeIndex ? () => setPlaying(true) : undefined}
-              onEnded={() => handleEnded(index)}
-              onError={() => handleError(index)}
-              className={cn(
-                'absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-slow ease-out-soft',
-                index === activeIndex ? 'opacity-100' : 'opacity-0'
-              )}
-            />
-          ))}
-        </div>
-      )}
+      <div
+        className={cn(
+          'pointer-events-none absolute inset-0 transition-opacity duration-slow ease-out-soft',
+          videoVisible ? 'opacity-100' : 'opacity-0'
+        )}
+      >
+        {heroVideoSources.map((src, index) => (
+          <video
+            key={src}
+            ref={(node) => {
+              videoRefs.current[index] = node;
+            }}
+            src={src}
+            muted
+            playsInline
+            preload={index === activeIndex || index === nextIndex ? 'auto' : 'metadata'}
+            data-active={index === activeIndex}
+            onTimeUpdate={() => handleTimeUpdate(index)}
+            onPlaying={index === activeIndex ? () => setPlaying(true) : undefined}
+            onEnded={() => handleEnded(index)}
+            onError={() => handleError(index)}
+            className={cn(
+              'absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-slow ease-out-soft',
+              index === activeIndex ? 'opacity-100' : 'opacity-0'
+            )}
+          />
+        ))}
+      </div>
     </div>
   );
 }

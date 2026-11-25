@@ -39,7 +39,7 @@ Sequence:
 5. Supporting copy fades up (600–700 ms).
 6. CTA underline draws left-to-right (180 ms, no redundant delay).
 
-Implementation: CSS keyframes in `globals.css` applied by `HeroReveal` with token-matched durations and explicit delays. The full sequence completes within the 1.2–1.6 s hero budget. CSS animations start without JavaScript, and a `<noscript>` rule still forces the staged hero to its final state. After hydration, `HeroVideoSequence` starts the next muted local clip 1.2 s before the current one ends and crossfades with the 700 ms soft-ease transition, so both clips have live frames during the handoff; the priority editorial image remains beneath them and is the only background under reduced motion or without JavaScript.
+Implementation: CSS keyframes in `globals.css` applied by `HeroReveal` with token-matched durations and explicit delays. The full sequence completes within the 1.2–1.6 s hero budget. CSS animations start without JavaScript, and a `<noscript>` rule still forces the staged hero to its final state. After hydration, `HeroVideoSequence` starts the next muted local clip 1.2 s before the current one ends and crossfades with the 700 ms soft-ease transition, so both clips have live frames during the handoff; there is no hero image layer, and reduced motion, no JavaScript, load errors and blocked autoplay leave the charcoal background visible.
 
 ## Logo reveal
 
@@ -60,7 +60,7 @@ Implementation: CSS keyframes in `globals.css` applied by `HeroReveal` with toke
 
 Preferred approach:
 
-1. Static editorial image baseline and CSS particles remain readable without WebGL.
+1. Static lookbook poster baseline and CSS particles remain readable without WebGL.
 2. Optional WebGL portrait cards use repository-driven fashion imagery, never a separate product model.
 3. Cards float slowly, tilt toward the pointer and drift faster with pointer velocity; holding the pointer down amplifies the movement.
 4. A soft rose-gold glow trails the pointer behind the cards; tap/click adds one brief pulse.
@@ -166,7 +166,7 @@ Constraints:
 ## Implemented homepage motion
 
 - `HeroReveal` coordinates emblem scale/fade, wordmark and eyebrow lift, two masked headline lines, supporting copy and CTA underline draw with CSS keyframes matched to motion tokens.
-- `HomeHero` adds a priority editorial image with an optional silent video sequence, a slow image drift and editorial frame details so the composition remains complete without WebGL or JavaScript.
+- `HomeHero` adds a silent video-only background with overlapping crossfades and editorial frame details; without video support the composition falls back to the charcoal base rather than an image.
 - `ParticleField` renders 12–14 deterministic motes on mobile and 18 on larger viewports, hidden under reduced motion.
 - `LookbookCanvas` renders three portrait cards on low tier and four on high tier, using repository-driven editorial imagery. Cards drift on independent cycles, tilt/parallax toward the pointer, respond to pointer velocity and move magnetically when the pointer is near. Holding the pointer down amplifies movement; a rose-gold glow trails the pointer behind the cards. Rendering pauses when off-screen or when the tab is hidden; reduced motion uses a single demand frame with interaction listeners disabled.
 - `WebGLGate` waits for intersection and an 800 ms idle window, resolves to a low tier below 1024 px and the full scene on desktops. Context loss and runtime errors fall back to `LookbookPoster`.

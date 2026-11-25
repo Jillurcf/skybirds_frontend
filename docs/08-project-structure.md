@@ -284,7 +284,7 @@ import { cn } from '@/lib/utils';
 - Original logo is never edited in place.
 - Derivative logo files are generated from the original and versioned.
 - Product images go in `public/images/products/<category>/`.
-- Category and editorial images go in `public/images/categories/` and `public/images/editorial/`, including the wide `hero-fashion.webp` baseline.
+- Category and editorial images go in `public/images/categories/` and `public/images/editorial/`, including the wide `hero-fashion.webp` editorial asset.
 - `npm run images:seed` downloads the documented Unsplash photo IDs and exports local WebP files.
 - `npm run images:seed:illustrations` regenerates the offline illustrated fallback set.
 - Prefer AVIF/WebP exports with descriptive names; keep source files OUT of `public` unless used.

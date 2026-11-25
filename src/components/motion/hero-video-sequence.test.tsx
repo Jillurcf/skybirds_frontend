@@ -2,29 +2,25 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { HeroVideoSequence } from '@/components/motion/hero-video-sequence';
 
-const fallbackImage = {
-  src: '/images/editorial/hero-fashion.webp',
-  alt: ''
-};
-
 afterEach(() => {
   vi.clearAllMocks();
 });
 
 describe('hero video sequence', () => {
-  it('renders six muted decorative clips over the static fallback image', async () => {
+  it('renders six muted decorative clips without an image fallback', async () => {
     const play = vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue();
     vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => undefined);
     vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => undefined);
 
-    const { container } = render(<HeroVideoSequence fallbackImage={fallbackImage} />);
+    const { container } = render(<HeroVideoSequence />);
 
     expect(container.firstElementChild).toHaveAttribute('aria-hidden', 'true');
-    expect(container.querySelector('img')).toHaveAttribute('alt', '');
+    expect(container.querySelector('img')).not.toBeInTheDocument();
 
     const videos = container.querySelectorAll('video');
     expect(videos).toHaveLength(6);
     expect(Array.from(videos).every((video) => video.muted && video.playsInline)).toBe(true);
+    expect(Array.from(videos).every((video) => !video.hasAttribute('poster'))).toBe(true);
     expect(videos[0]).toHaveAttribute('data-active', 'true');
     await waitFor(() => expect(play).toHaveBeenCalledTimes(1));
   });
@@ -34,7 +30,7 @@ describe('hero video sequence', () => {
     vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => undefined);
     vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => undefined);
 
-    const { container } = render(<HeroVideoSequence fallbackImage={fallbackImage} />);
+    const { container } = render(<HeroVideoSequence />);
     const videos = container.querySelectorAll('video');
 
     await waitFor(() => expect(play).toHaveBeenCalledTimes(1));
@@ -58,7 +54,7 @@ describe('hero video sequence', () => {
     vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => undefined);
     vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(() => undefined);
 
-    const { container } = render(<HeroVideoSequence fallbackImage={fallbackImage} />);
+    const { container } = render(<HeroVideoSequence />);
     const videos = container.querySelectorAll('video');
 
     await waitFor(() => expect(play).toHaveBeenCalledTimes(1));

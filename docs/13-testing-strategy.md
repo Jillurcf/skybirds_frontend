@@ -95,12 +95,13 @@ Still recommended when a browser runner is available:
    - Hero, reveals, route transitions, gallery and selectors show final states immediately.
 
  8. **No WebGL**
-     - Block WebGL context → static lookbook poster renders over the hero image → no console errors.
+     - Block WebGL context → static lookbook poster renders over the hero video → no console errors.
 
     - Set a narrow viewport → low-tier scene still mounts when WebGL exists; no poster-only width tier remains.
 
 9. **No JavaScript**
-   - Load the homepage with JavaScript disabled → hero and section content remain visible.
+    - Load the homepage with JavaScript disabled → hero copy and section content remain visible over the charcoal hero base.
+
 
 ## Build checks
 
@@ -137,7 +138,7 @@ All five commands were run against the final code. Add `npm run test:e2e` when P
 
 ## 3D QA checklist
 
-- Hero image and lookbook poster appear before WebGL loads.
+- Hero video and lookbook poster render before WebGL loads.
 - WebGL waits for hero intersection and an 800 ms idle window.
 - No hydration mismatch.
 - No flash of unstyled canvas.

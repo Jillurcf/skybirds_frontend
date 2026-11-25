@@ -8,7 +8,7 @@
 | First-load JS | ≤ 170 kB gzip (excluding deferred 3D) |
 | 3D chunk | Deferred; loaded after idle/intersection |
 | Hero image | Optimized AVIF/WebP, explicit dimensions |
-| Hero video | Six muted local MP4 clips streamed sequentially; static image fallback |
+| Hero video | Six muted local MP4 clips streamed sequentially; video-only background |
 | Total page weight (home, excluding streamed hero video) | ≤ 2.5 MB on mobile target |
 | CLS | ≤ 0.1 |
 | LCP | ≤ 2.5 s lab mobile |
@@ -21,7 +21,7 @@
 - Prefer AVIF then WebP; keep JPEG fallback where needed.
 - Local WebP assets are generated from standard-license Unsplash photos by `npm run images:seed`; they remain illustrative until final photography is supplied.
 - Decorative WebGL fallback and lookbook poster images use empty alt text and `aria-hidden` wrappers.
-- Lazy-load below-fold images; hero image priority.
+- Lazy-load below-fold images; the hero has no image layer.
 - Hero video playback starts after hydration; the active and upcoming clips auto-preload and the remaining clips preload metadata only. Playback pauses off-screen or in a hidden tab.
 - Use `placeholderColor` from product data for shimmer/solid placeholder.
 - Avoid loading full-resolution images for cards.
@@ -104,7 +104,7 @@ WCAG 2.2 AA.
 - Provide no parallax, particles or scroll-triggered transforms when reduced.
 - Reveals, route transitions and hero staging never leave important content permanently hidden; a `<noscript>` rule finalises the hero.
 - Keep decorative CSS motion finite and provide instant state changes for gallery and selectors under reduced motion.
-- No autoplay audio. Decorative background video is muted, `playsInline`, has no controls and falls back to the static hero image under reduced motion, no JavaScript, load errors and blocked autoplay.
+- No autoplay audio. Decorative background video is muted, `playsInline`, has no controls or poster; reduced motion, no JavaScript, load errors and blocked autoplay leave the charcoal base visible.
 - No flashing content.
 
 ## Screen reader details
