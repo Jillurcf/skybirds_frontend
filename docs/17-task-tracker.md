@@ -131,6 +131,7 @@ Legend: `[ ]` pending · `[x]` complete · `[~]` in progress · `[!]` blocked.
 **Status:** Automated QA and launch configuration complete; client assets and browser-tool sign-offs remain pending.
 
 - [x] Hero visual correction: priority editorial image, CSS entrance animation and low-tier/static-frame WebGL on all viewports.
+- [x] Silent hero video sequence with six local clips, CSS crossfade, static/no-JS and reduced-motion fallback.
 - [x] Repository-driven imagery for featured collections and the manufacturing study.
 - [x] Unit tests (utilities, SEO, repository, catalog filters/search/sort/URL state, variants, WebGL helpers).
 - [x] Component tests (logo, navbar/mobile drawer, catalog, product selectors, contact links, route transition, WebGL poster).

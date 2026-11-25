@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { HeroVideoSequence } from '@/components/motion/hero-video-sequence';
 import { WebGLGate } from '@/components/three/webgl-gate';
 import { Container } from '@/components/ui/container';
 import { ParticleField } from '@/components/motion/particle-field';
@@ -14,17 +14,10 @@ export function HomeHero({ content, lookbookImages = [] }: HomeHeroProps) {
   return (
     <section
       aria-labelledby="home-hero-heading"
-      className="relative isolate flex min-h-[calc(100svh-72px)] overflow-hidden bg-charcoal text-ivory"
+      className="relative isolate flex min-h-[calc(100svh-72px)] max-h-screen overflow-hidden bg-charcoal text-ivory"
     >
-      <div aria-hidden="true" className="absolute inset-0 -z-20 overflow-hidden bg-charcoal">
-        <Image
-          src={content.image.src}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="hero-image-drift object-cover object-center"
-        />
+      <HeroVideoSequence fallbackImage={content.image} />
+      <div aria-hidden="true" className="absolute inset-0 -z-20 overflow-hidden">
         <div className="absolute inset-0 bg-charcoal/25" />
         <div className="hero-texture absolute inset-0" />
       </div>

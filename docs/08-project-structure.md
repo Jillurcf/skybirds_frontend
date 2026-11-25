@@ -132,6 +132,7 @@ Added for the cinematic homepage:
 ```
 src/components/
 ├── motion/
+│   ├── hero-video-sequence.tsx
 │   ├── horizontal-editorial.tsx
 │   ├── parallax-image.tsx
 │   └── particle-field.tsx
@@ -207,6 +208,7 @@ Implemented in Milestone 1:
 src/config/
 ├── animations.ts
 ├── contact.ts
+├── hero-videos.ts
 ├── navigation.ts
 └── site.ts
 

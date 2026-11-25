@@ -102,7 +102,8 @@ Use 4 px base increment. Editorial sections use larger rhythmic steps.
 
 The homepage uses the shared primitives in this order: `HomeHero`, `BrandIntroduction`, `FeaturedCollections`, `NewArrivals`, `SignatureMenswear`, `ManufacturingCapabilities`, `CraftsmanshipQuality`, `CompanyStory`, `ContactCta` and the global `SiteFooter`.
 
-Hero copy, its priority editorial image and the WebGL card imagery are delivered through `getHomeContent()` and rendered with the existing `Section`, `Container`, `Button` and `BrandLogo` primitives. The hero image is a full-bleed baseline; floating lookbook cards, gradient scrims and particles are atmospheric layers above it. Featured collections and the manufacturing study use the same repository-driven image pattern as arrivals, signature and craftsmanship sections. Dark sections override `.section-title` and `.lede` to ivory through token-aware wrapper selectors.
+Hero copy, its priority editorial image and the WebGL card imagery are delivered through `getHomeContent()` and rendered with the existing `Section`, `Container`, `Button` and `BrandLogo` primitives. The hero is capped at `max-h-screen` with a `100svh - 72px` minimum so it never grows beyond the viewport; the hero image is a full-bleed baseline, and floating lookbook cards, gradient scrims and particles are atmospheric layers above it.
+ Featured collections and the manufacturing study use the same repository-driven image pattern as arrivals, signature and craftsmanship sections. Dark sections override `.section-title` and `.lede` to ivory through token-aware wrapper selectors.
 
 ## shadcn/ui usage
 
